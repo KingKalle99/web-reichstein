@@ -1,783 +1,1911 @@
+```html
 <!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reichstein Automobile</title>
-  <meta name="description" content="Reichstein Automobile – Fahrzeuge, Service & Kontakt." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Reichstein Automobile" />
-  <meta property="og:description" content="Fahrzeuge, Service & Kontakt." />
-  <meta property="og:type" content="website" />
-
+  <title>Reichstein Automobile – Fahrzeugsuche</title>
+  <meta name="description" content="Moderne Fahrzeugsuche – edles Design, Filter, Favoriten, Vergleich, Anfragen & Inzahlungnahme." />
   <style>
+    /* =========================
+       Reichstein Automobile – Single-File UI (Teil 1/2)
+       Edler, moderner Look (AutoHero-inspiriert, eigenständig)
+       ========================= */
+
     :root{
-  /* Basis */
-  --bg: #FEFEFE;          /* Basis weiß */
-  --panel: #FEFEFE;       /* Cards */
-  --panel2: #FEFEFE;      
-  --text: #1F3872;        /* Primär-Blau als Text */
-  --muted: #4C4D5C;       /* Akzent dunkel */
-  --border: #C4CBD9;      /* Akzent hell */
+  /* Reichstein Corporate Theme */
+  --bg: #FEFEFE;          /* Basis */
+  --panel: #FEFEFE;       /* Karten/Flächen */
+  --panel2: #FEFEFE;
+  --border: #C4CBD9;      /* Linien/Umrandungen */
 
-  /* Brand */
-  --brand: #1F3872;       /* primäres blau */
-  --brand2: #56729B;      /* sekundäres blau */
+  --text: #1F3872;        /* Primär-Blau (Headlines/Text) */
+  --muted: #4C4D5C;       /* Akzent dunkel (Sekundärtext) */
+  --faint: #56729B;       /* Sekundär-Blau (leichte Hervorhebung) */
 
-  /* Akzente */
-  --ok: #56729B;
-  --warn: #4C4D5C;
+  --accent: #1F3872;      /* Primär (Buttons/Highlights) */
+  --accent2: #56729B;     /* Sekundär (Hover/Badges) */
 
-  /* Layout */
-  --radius: 16px;
-  --max: 1140px;
-  --pad: 18px;
-  --shadow: 0 16px 40px rgba(31,56,114,.18);
+  --danger: #b4232a;      /* dezentes Rot (kannst du später anpassen) */
+  --ok: #1F3872;          /* Corporate statt Grün */
+
+  --shadow: 0 18px 50px rgba(31,56,114,.16);
+  --shadow2: 0 10px 28px rgba(31,56,114,.12);
+
+  --radius: 18px;
+  --radius2: 14px;
+  --maxw: 1240px;
+
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
 }
 
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
     body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
       background:
-        radial-gradient(1100px 520px at 15% 0%, rgba(79,140,255,.22), transparent 60%),
-        radial-gradient(900px 540px at 85% 10%, rgba(139,92,246,.18), transparent 55%),
-        var(--bg);
-      color:var(--text);
-      line-height:1.55;
+        radial-gradient(1200px 600px at 20% -10%, rgba(199,162,75,.25), transparent 60%),
+        radial-gradient(900px 500px at 95% 0%, rgba(125,211,252,.18), transparent 55%),
+        radial-gradient(900px 700px at 40% 120%, rgba(52,211,153,.10), transparent 60%),
+        linear-gradient(180deg, #070a0f 0%, #0b0f14 40%, #070a0f 100%);
+      overflow-x:hidden;
     }
-    a{color:inherit}
-    .container{max-width:var(--max); margin:0 auto; padding:0 var(--pad)}
+
+    a{ color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+
+    /* Layout */
+    .wrap{ width: min(var(--maxw), calc(100% - 32px)); margin: 0 auto; }
     .topbar{
-      position: sticky;
-      top:0;
-      z-index:50;
-      background: #FEFEFE;
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(9,12,18,.78), rgba(9,12,18,.42));
       border-bottom: 1px solid var(--border);
     }
 
-    .topbar .inner{
+    .topbar-inner{
       display:flex; align-items:center; justify-content:space-between;
-      padding: 12px 0;
-      gap: 12px;
+      padding: 14px 0;
+      gap: 14px;
     }
+
     .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight: 800;
-      text-decoration:none;
-      letter-spacing:.2px;
-      white-space:nowrap;
-      color: var(--brand);
-   }
-
-  .logo{
-      width:34px;
-      height:34px;
-      border-radius:10px;
-      background: linear-gradient(135deg,var(--brand),var(--brand2));
+      display:flex; align-items:center; gap: 12px; min-width: 240px;
+    }
+    .logo{
+      width: 44px; height: 44px; border-radius: 14px;
+      display:grid; place-items:center;
+      background: linear-gradient(145deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
       border: 1px solid var(--border);
-   }
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .logo img{
+      width: 100%; height: 100%; object-fit: cover;
+      filter: saturate(1.1) contrast(1.05);
+    }
+    .brand-title{
+      display:flex; flex-direction:column; line-height:1.1;
+    }
+    .brand-title strong{ font-size: 14px; letter-spacing: .25px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
 
-    nav{
-      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    .nav{
+      display:flex; align-items:center; gap: 8px; flex-wrap:wrap;
       justify-content:flex-end;
     }
-    nav a{
-  color: var(--muted);
-  text-decoration:none;
-  padding: 8px 10px;
-  border-radius: 10px;
-  font-weight: 500;
-}
-nav a:hover{
-  color: var(--brand);
-  background: rgba(31,56,114,.05);
-}
-
-    nav a:hover{color:var(--text); background: rgba(255,255,255,.06)}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.14);
-      text-decoration:none;
-      background: rgba(255,255,255,.06);
-      color: var(--text);
+    .pill{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      transition: .18s ease;
+      cursor:pointer;
+      user-select:none;
     }
-    .btn.primary{
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #FEFEFE;
-  box-shadow: 0 10px 30px rgba(31,56,114,.25);
-}
+    .pill:hover{ background: rgba(255,255,255,.065); color: var(--text); transform: translateY(-1px); }
+    .pill.primary{
+      background: linear-gradient(145deg, rgba(199,162,75,.22), rgba(199,162,75,.10));
+      border-color: rgba(199,162,75,.32);
+      color: rgba(255,255,255,.92);
+    }
+    .pill.primary:hover{ background: linear-gradient(145deg, rgba(199,162,75,.30), rgba(199,162,75,.12)); }
+    .pill .dot{
+      width: 8px; height: 8px; border-radius: 999px; background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(199,162,75,.14);
+    }
 
-    .btn:hover{filter:brightness(1.05)}
+    /* Hero */
     .hero{
-      padding: 64px 0 24px;
+      padding: 26px 0 18px;
     }
     .hero-grid{
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 16px;
-      align-items:stretch;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: stretch;
     }
-    @media (max-width: 900px){
-      .hero-grid{grid-template-columns: 1fr}
-    }
-    .card{
-  background: #FEFEFE;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(31,56,114,.08);
-}
-
-    .hero-main{
-      padding: 22px;
+    .hero-card{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
     }
-    .hero-main:before{
-  content:"";
-  display:none;
-}
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(700px 260px at 20% 10%, rgba(199,162,75,.22), transparent 60%),
+        radial-gradient(700px 260px at 90% 10%, rgba(125,211,252,.14), transparent 60%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .hero-inner{ position:relative; padding: 22px; }
+    .kicker{
+      display:inline-flex; gap: 8px; align-items:center;
+      font-size: 12px; color: var(--muted);
+      border: 1px solid rgba(199,162,75,.24);
+      background: rgba(199,162,75,.10);
+      padding: 6px 10px; border-radius: 999px;
+      width: fit-content;
+    }
+    .kicker .spark{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(199,162,75,.12);
+    }
+    h1{
+      margin: 12px 0 8px;
+      font-size: clamp(24px, 3.2vw, 38px);
+      letter-spacing: -0.02em;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      max-width: 62ch;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .hero-actions{
+      margin-top: 16px;
+      display:flex; gap: 10px; flex-wrap:wrap;
+    }
 
-    .hero-main > *{position:relative}
-    h1{margin:0 0 10px; font-size: clamp(2rem, 4vw, 3.1rem); letter-spacing:-.5px}
-    .lead{margin:0 0 16px; color: var(--muted); max-width: 65ch}
-    .pillrow{display:flex; flex-wrap:wrap; gap:10px; margin: 14px 0 18px}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
+    /* Right info card */
+    .info{
+      display:flex; flex-direction:column; gap: 12px;
+    }
+    .info .mini{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
+    .mini h3{ margin:0 0 10px; font-size: 14px; color: rgba(255,255,255,.88); }
+    .mini .row{ display:flex; justify-content:space-between; gap: 12px; padding: 9px 0; border-top: 1px solid rgba(255,255,255,.07); }
+    .mini .row:first-of-type{ border-top: 0; }
+    .mini .row span{ color: var(--muted); font-size: 13px; }
+    .mini .row b{ font-weight: 600; font-size: 13px; color: rgba(255,255,255,.88); }
+    .badge{
+      display:inline-flex; gap: 8px; align-items:center;
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: 14px;
-      white-space:nowrap;
-    }
-    .dot{width:8px;height:8px;border-radius:99px;background: var(--ok)}
-    .actions{display:flex; gap:10px; flex-wrap:wrap}
-    .hero-side{
-      padding: 18px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-      justify-content:space-between;
-    }
-    .mini{
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 14px;
-    }
-    .mini h3{margin:0 0 6px; font-size: 16px}
-    .mini p{margin:0; color:var(--muted); font-size: 14px}
-    .grid2{
-      display:grid; grid-template-columns: 1fr 1fr; gap:10px;
-    }
-    @media (max-width: 900px){
-      .grid2{grid-template-columns: 1fr}
-    }
-    section{padding: 26px 0}
-    .section-title{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
-      margin-bottom: 12px;
-    }
-    h2{margin:0; font-size: 22px}
-    .subtitle{margin:0; color:var(--muted); font-size: 14px}
-    .toolbar{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    }
-    .input{
-      display:flex; align-items:center; gap:10px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 12px;
-      padding: 10px 12px;
-      min-width: 220px;
-    }
-    .input input, .input select, textarea{
-      width:100%;
-      border:0;
-      outline:none;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-    }
-    .input select option{background: var(--bg)}
-    .vehicles{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    @media (max-width: 980px){ .vehicles{grid-template-columns: repeat(2,1fr)} }
-    @media (max-width: 640px){ .vehicles{grid-template-columns: 1fr} }
-    .vcard{
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height: 220px;
-    }
-    .vimg{
-  height: 140px;
-  background: #C4CBD9;
-  border-bottom: 1px solid var(--border);
-}
-
-    .vbody{padding: 14px}
-    .vtitle{margin:0 0 6px; font-weight: 700}
-    .vmeta{margin:0; color: var(--muted); font-size: 14px}
-    .tagrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .tag{
+      border: 1px solid rgba(125,211,252,.25);
+      background: rgba(125,211,252,.08);
+      color: rgba(255,255,255,.86);
       font-size: 12px;
-      color: var(--muted);
-      padding: 6px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
+      width: fit-content;
     }
-    .price{
-      margin-top: 10px;
-      font-weight: 800;
-      letter-spacing:.2px;
+
+    /* Search panel */
+    .panel{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      margin: 12px 0 18px;
     }
-    .row{
+    .panel-head{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+    }
+    .panel-head h2{
+      margin:0;
+      font-size: 14px;
+      letter-spacing: .2px;
+      color: rgba(255,255,255,.88);
+      display:flex; align-items:center; gap: 10px;
+    }
+    .panel-head small{ color: var(--muted); font-weight: 500; }
+    .panel-body{ padding: 14px 16px 16px; }
+
+    .filters{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      align-items:start;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
     }
-    @media (max-width: 900px){ .row{grid-template-columns:1fr} }
-    .list{
-      display:grid; gap:10px;
+    .field{
+      grid-column: span 3;
+      display:flex; flex-direction:column; gap: 6px;
     }
-    .li{
-      display:flex; gap:10px;
-      padding: 12px;
-      border-radius: 14px;
+    .field.span-6{ grid-column: span 6; }
+    .field.span-4{ grid-column: span 4; }
+    .field.span-3{ grid-column: span 3; }
+    .field.span-2{ grid-column: span 2; }
+    .field.span-12{ grid-column: span 12; }
+
+    label{
+      font-size: 12px; color: var(--muted);
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px;
+    }
+
+    .control{
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      outline: none;
+      transition: .18s ease;
+    }
+    .control:focus{
+      border-color: rgba(199,162,75,.45);
+      box-shadow: 0 0 0 4px rgba(199,162,75,.14);
+    }
+
+    .range{
+      display:flex; gap: 10px;
+    }
+
+    .actions{
+      margin-top: 12px;
+      display:flex; justify-content:space-between; align-items:center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .actions-left{ display:flex; gap: 10px; flex-wrap: wrap; }
+    .btn{
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.90);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      transition: .18s ease;
+      display:inline-flex; align-items:center; gap: 8px;
+      user-select:none;
     }
-    .icon{
-      width:34px;height:34px;border-radius:12px;
-      display:grid; place-items:center;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      flex: 0 0 auto;
+    .btn:hover{ background: rgba(255,255,255,.08); transform: translateY(-1px); }
+    .btn.primary{
+      background: linear-gradient(145deg, rgba(199,162,75,.26), rgba(199,162,75,.12));
+      border-color: rgba(199,162,75,.32);
     }
-    .li strong{display:block}
-    .li span{display:block; color:var(--muted); font-size: 14px; margin-top:2px}
-    form{
-      display:grid;
-      gap: 10px;
+    .btn.primary:hover{
+      background: linear-gradient(145deg, rgba(199,162,75,.34), rgba(199,162,75,.14));
     }
-    textarea{
-      min-height: 120px;
-      resize: vertical;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 12px;
-      padding: 12px;
-    }
-    .foot{
-      border-top: 1px solid rgba(255,255,255,.12);
-      padding: 18px 0 28px;
+    .btn.ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.12);
       color: var(--muted);
-      font-size: 14px;
     }
-    .foot .inner{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      flex-wrap:wrap;
+    .btn.danger{
+      border-color: rgba(251,113,133,.35);
+      background: rgba(251,113,133,.10);
     }
-    .smalllinks{display:flex; gap:10px; flex-wrap:wrap}
-    .smalllinks a{color: var(--muted); text-decoration:none}
-    .smalllinks a:hover{color: var(--text)}
-    .floating{
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      display:flex;
-      gap: 10px;
-      flex-direction:column;
-      z-index:60;
-    }
-    .fab{
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      display:grid;
-      place-items:center;
-      text-decoration:none;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-    }
-    .fab.primary{
-      background: linear-gradient(135deg, rgba(34,197,94,.92), rgba(79,140,255,.82));
-      border-color: rgba(255,255,255,.22);
-    }
-    .sr{position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden}
-    .note{
+    .btn:active{ transform: translateY(0); }
+
+    .kpis{
+      display:flex; gap: 10px; flex-wrap:wrap; align-items:center;
       color: var(--muted);
-      font-size: 13px;
-      margin-top: 6px;
+      font-size: 12px;
     }
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
+    .chip{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .chip b{ color: rgba(255,255,255,.88); font-weight: 650; }
+
+    /* Results grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .card{
+      grid-column: span 4;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+      transition: .18s ease;
+    }
+    .card:hover{ transform: translateY(-3px); border-color: rgba(255,255,255,.16); }
+    .thumb{
+      height: 190px;
+      background: rgba(255,255,255,.04);
+      position:relative;
+      overflow:hidden;
+    }
+    .thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      filter: saturate(1.06) contrast(1.05);
+    }
+    .thumb::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.55));
+      pointer-events:none;
+    }
+    .tagbar{
+      position:absolute; left: 10px; right: 10px; bottom: 10px;
+      display:flex; justify-content:space-between; gap: 8px;
+      align-items:flex-end;
+    }
+    .tag{
+      display:inline-flex; align-items:center; gap: 8px;
       padding: 7px 10px;
       border-radius: 999px;
+      background: rgba(0,0,0,.45);
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      font-size: 13px;
+      color: rgba(255,255,255,.92);
+      font-size: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .tag .dot{
+      width:8px; height:8px; border-radius:999px; background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(125,211,252,.14);
+    }
+    .tag.price{
+      background: rgba(199,162,75,.18);
+      border-color: rgba(199,162,75,.30);
+    }
+
+    .card-body{ padding: 14px 14px 12px; }
+    .title{
+      display:flex; justify-content:space-between; align-items:flex-start; gap: 10px;
+      margin-bottom: 8px;
+    }
+    .title h3{
+      margin:0;
+      font-size: 14px;
+      line-height: 1.3;
+      letter-spacing: .1px;
+    }
+    .title .sub{
+      margin-top: 4px;
+      font-size: 12px;
       color: var(--muted);
     }
-    .warn{background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.25)}
-    .ok{background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.25)}
+    .iconbtn{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+      width: 36px; height: 36px;
+      display:grid; place-items:center;
+      cursor:pointer;
+      transition: .18s ease;
+      flex: 0 0 auto;
+    }
+    .iconbtn:hover{ background: rgba(255,255,255,.08); transform: translateY(-1px); }
+    .iconbtn.active{
+      border-color: rgba(199,162,75,.40);
+      background: rgba(199,162,75,.16);
+    }
+    .specs{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .spec{
+      display:flex; flex-direction:column; gap: 2px;
+      padding: 8px 9px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .spec span{ font-size: 11px; color: var(--muted); }
+    .spec b{ font-size: 12px; color: rgba(255,255,255,.88); font-weight: 650; }
+
+    .card-foot{
+      padding: 12px 14px 14px;
+      display:flex; gap: 8px; flex-wrap:wrap;
+    }
+
+    /* Pagination */
+    .pager{
+      display:flex; justify-content:space-between; align-items:center; gap: 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      padding: 12px 14px;
+      margin-bottom: 26px;
+    }
+
+    /* Modals / Drawer */
+    .overlay{
+      position:fixed; inset:0; z-index: 100;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(8px);
+      display:none;
+      padding: 18px;
+    }
+    .overlay.show{ display:block; }
+    .modal{
+      width: min(980px, 100%);
+      margin: 0 auto;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(145deg, rgba(12,16,22,.95), rgba(9,12,18,.92));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      max-height: calc(100vh - 36px);
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-head{
+      display:flex; justify-content:space-between; align-items:center; gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .modal-head h3{ margin:0; font-size: 14px; color: rgba(255,255,255,.90); }
+    .modal-body{
+      padding: 14px 16px 16px;
+      overflow:auto;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+    .gallery{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      background: rgba(255,255,255,.03);
+    }
+    .gallery-main{ height: 320px; background: rgba(255,255,255,.04); position:relative; }
+    .gallery-main img{ width:100%; height:100%; object-fit:cover; }
+    .gallery-strip{
+      display:flex; gap: 8px;
+      padding: 10px;
+      overflow:auto;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .thumb2{
+      width: 92px; height: 62px; flex: 0 0 auto;
+      border-radius: 12px; overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      opacity:.85;
+      transition: .18s ease;
+    }
+    .thumb2:hover{ opacity:1; transform: translateY(-1px); }
+    .thumb2.active{ border-color: rgba(199,162,75,.45); opacity:1; }
+    .thumb2 img{ width:100%; height:100%; object-fit:cover; }
+
+    .sidebox{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      position: sticky;
+      top: 10px;
+      height: fit-content;
+    }
+    .pricebig{
+      font-size: 22px;
+      font-weight: 780;
+      letter-spacing: -.01em;
+    }
+    .muted{ color: var(--muted); }
+    .list{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .li{
+      padding: 9px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      display:flex; justify-content:space-between; gap: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+    }
+    .li span{ color: var(--muted); }
+
+    /* Sections */
+    .section-title{
+      display:flex; align-items:center; justify-content:space-between; gap: 12px;
+      margin: 10px 0 10px;
+    }
+    .section-title h2{ margin:0; font-size: 14px; color: rgba(255,255,255,.88); }
+    .divider{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
+
+    /* Footer */
+    footer{
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      padding: 22px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .foot-grid{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 14px;
+      align-items:start;
+    }
+    .foot-grid h4{ margin:0 0 10px; color: rgba(255,255,255,.86); font-size: 12px; }
+    .foot-grid a{ color: var(--muted); display:block; padding: 4px 0; }
+    .foot-grid a:hover{ color: rgba(255,255,255,.88); }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .card{ grid-column: span 6; }
+      .two-col{ grid-template-columns: 1fr; }
+      .sidebox{ position: static; }
+      .field{ grid-column: span 6; }
+      .field.span-2{ grid-column: span 6; }
+      .field.span-3{ grid-column: span 6; }
+      .field.span-4{ grid-column: span 6; }
+      .field.span-6{ grid-column: span 12; }
+      .foot-grid{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px){
+      .brand{ min-width: auto; }
+      .card{ grid-column: span 12; }
+      .specs{ grid-template-columns: repeat(2, 1fr); }
+      .filters{ grid-template-columns: repeat(12, 1fr); }
+      .field{ grid-column: span 12; }
+      .range{ flex-direction:column; }
+      .pager{ flex-direction:column; align-items:stretch; }
+      .nav{ justify-content:flex-end; }
+    }
+
+    /* Utility */
+    .hide{ display:none !important; }
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    .toast{
+      position: fixed; right: 16px; bottom: 16px; z-index: 200;
+      display:flex; flex-direction:column; gap: 10px;
+      pointer-events:none;
+    }
+    .toast .t{
+      pointer-events:auto;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(12,16,22,.92);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow2);
+      max-width: 360px;
+      font-size: 12px;
+      color: rgba(255,255,255,.88);
+      display:flex; align-items:flex-start; justify-content:space-between; gap: 12px;
+    }
+    .t small{ color: var(--muted); display:block; margin-top: 4px; }
   </style>
 </head>
-
 <body>
   <header class="topbar">
-    <div class="container">
-      <div class="inner">
-        <a class="brand" href="#top">
-          <span class="logo" aria-hidden="true"></span>
-          <span>Reichstein Automobile</span>
-        </a>
-        <nav aria-label="Hauptnavigation">
-          <a href="#fahrzeuge">Fahrzeuge</a>
-          <a href="#service">Service</a>
-          <a href="#ueberuns">Über uns</a>
-          <a href="#kontakt">Kontakt</a>
-          <a class="btn primary" href="#kontakt">Anfrage senden</a>
-        </nav>
-      </div>
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#/fahrzeuge" id="homeLink" aria-label="Zur Fahrzeugsuche">
+        <div class="logo" title="Reichstein Automobile">
+          <!-- LOGO: Lege dein Logo als public/logo.svg (oder ersetze hier die URL) -->
+          <img src="logo.svg" alt="Reichstein Automobile Logo" onerror="this.style.display='none'; this.parentElement.textContent='RA'; this.parentElement.style.fontWeight='800';" />
+        </div>
+        <div class="brand-title">
+          <strong>Reichstein Automobile</strong>
+          <span>Premium Gebrauchtwagen • Modern • Transparent</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a class="pill" href="#/fahrzeuge" id="navCars"><span class="dot"></span>Fahrzeuge</a>
+        <a class="pill" href="#/inzahlungnahme" id="navTrade">Inzahlungnahme</a>
+        <a class="pill" href="#/kontakt" id="navContact">Kontakt</a>
+        <a class="pill" href="#/favoriten" id="navFav">Favoriten <span id="favCount" class="chip"><b>0</b></span></a>
+        <a class="pill primary" href="#/vergleich" id="navCompare">Vergleich <span id="cmpCount" class="chip"><b>0</b></span></a>
+      </nav>
     </div>
   </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="container">
-        <div class="hero-grid">
-          <div class="card hero-main">
-            <h1>Fahrzeuge mit klaren Infos. Service ohne Umwege.</h1>
-            <p class="lead">
-              Willkommen bei Reichstein Automobile. Hier kannst du Fahrzeuge entdecken, Anfragen stellen
-              und wichtige Infos schnell finden. (Inhalte/Bestand kannst du später einfach ersetzen.)
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="hero-inner">
+            <div class="kicker"><span class="spark"></span> Edle Fahrzeugsuche – wie ein Online-Autohaus</div>
+            <h1>Finde dein nächstes Fahrzeug – schnell, modern, transparent.</h1>
+            <p>
+              Filter nach Preis, Marke, Kilometer, Erstzulassung, Getriebe, Kraftstoff & mehr. Speichere Favoriten,
+              vergleiche bis zu 3 Fahrzeuge und sende eine Anfrage in Sekunden.
             </p>
-
-            <div class="pillrow" aria-label="Highlights">
-              <span class="pill"><span class="dot" aria-hidden="true"></span>Geprüfte Fahrzeuge</span>
-              <span class="pill"><span class="dot" aria-hidden="true"></span>Finanzierung möglich</span>
-              <span class="pill"><span class="dot" aria-hidden="true"></span>Ankauf/Trade-In</span>
-              <span class="pill"><span class="dot" aria-hidden="true"></span>Termin nach Absprache</span>
+            <div class="hero-actions">
+              <button class="btn primary" id="btnScrollToResults">Jetzt Fahrzeuge ansehen</button>
+              <button class="btn ghost" id="btnOpenTradeFromHero">Inzahlungnahme starten</button>
+              <button class="btn" id="btnQuickContact">Schnellkontakt</button>
             </div>
+          </div>
+        </div>
 
-            <div class="actions">
-              <a class="btn primary" href="#fahrzeuge">Fahrzeuge ansehen</a>
-              <a class="btn" href="#kontakt">Kontakt</a>
-              <a class="btn" href="#service">Leistungen</a>
-            </div>
-
-            <p class="note">
-              Tipp: Ersetze später Logo, Adresse, Telefon, WhatsApp-Nummer und Fahrzeugdaten.
-            </p>
+        <div class="info">
+          <div class="mini">
+            <h3>Heute im Überblick</h3>
+            <div class="row"><span>Fahrzeuge im Bestand</span><b id="kpiTotal">–</b></div>
+            <div class="row"><span>Durchschnittspreis</span><b id="kpiAvg">–</b></div>
+            <div class="row"><span>Neueste Zugänge</span><b id="kpiNew">–</b></div>
+            <div class="badge">✔ Finanzierung/Anfrage in 1 Minute • ✔ Favoriten • ✔ Vergleich</div>
           </div>
 
-          <aside class="card hero-side" aria-label="Schnellinfos">
-            <div class="mini">
-              <h3>Öffnungszeiten</h3>
-              <p>Mo–Fr: 09:00–18:00<br/>Sa: 10:00–14:00<br/>So: geschlossen</p>
-            </div>
-
-            <div class="grid2">
-              <div class="mini">
-                <h3>Telefon</h3>
-                <p><a href="tel:+491234567890">+49 123 4567890</a></p>
-              </div>
-              <div class="mini">
-                <h3>E-Mail</h3>
-                <p><a href="mailto:info@reichstein-automobile.de">info@reichstein-automobile.de</a></p>
-              </div>
-            </div>
-
-            <div class="mini">
-              <h3>Standort</h3>
-              <p>
-                Musterstraße 1, 12345 Musterstadt<br/>
-                <a href="https://www.google.com/maps?q=Musterstra%C3%9Fe+1+12345+Musterstadt" target="_blank" rel="noopener">
-                  In Google Maps öffnen
-                </a>
-              </p>
-            </div>
-
-            <div class="mini">
-              <span class="badge ok">Schnelle Antwort</span>
-              <span class="badge warn" style="margin-left:8px">Termin empfohlen</span>
-              <p class="note">Du kannst die Texte hier später 1:1 austauschen.</p>
-            </div>
-          </aside>
+          <div class="mini">
+            <h3>Öffnungszeiten (Beispiel)</h3>
+            <div class="row"><span>Mo–Fr</span><b>09:00–18:00</b></div>
+            <div class="row"><span>Sa</span><b>10:00–14:00</b></div>
+            <div class="row"><span>So</span><b>geschlossen</b></div>
+            <div class="badge" style="border-color: rgba(199,162,75,.25); background: rgba(199,162,75,.08);">☎ Telefon & WhatsApp CTA in den Details</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="fahrzeuge">
-      <div class="container">
-        <div class="section-title">
-          <div>
-            <h2>Fahrzeuge</h2>
-            <p class="subtitle">Demo-Bestand – ersetze die Karten durch echte Fahrzeuge.</p>
-          </div>
-          <div class="toolbar" aria-label="Fahrzeug Filter">
-            <label class="input" aria-label="Suche">
-              <span class="sr">Suche</span>
-              <input id="search" type="search" placeholder="Suchen (z.B. BMW, Diesel, 2020)..." />
-            </label>
-            <label class="input" aria-label="Kategorie">
-              <span class="sr">Kategorie</span>
-              <select id="category">
-                <option value="all">Alle</option>
-                <option value="limousine">Limousine</option>
-                <option value="suv">SUV</option>
-                <option value="kombi">Kombi</option>
-                <option value="kleinwagen">Kleinwagen</option>
-              </select>
-            </label>
-          </div>
-        </div>
-
-        <div class="vehicles" id="vehicleGrid">
-          <!-- Demo cards -->
-          <article class="card vcard" data-category="suv" data-search="bmw x3 diesel 2020 automatik">
-            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
-            <div class="vbody">
-              <h3 class="vtitle">BMW X3 xDrive</h3>
-              <p class="vmeta">2020 • Diesel • Automatik • 78.000 km</p>
-              <div class="tagrow">
-                <span class="tag">SUV</span><span class="tag">8-fach Bereifung</span><span class="tag">Navi</span>
-              </div>
-              <div class="price">24.900 €</div>
-            </div>
-          </article>
-
-          <article class="card vcard" data-category="limousine" data-search="audi a4 benziner 2019 s tronic">
-            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
-            <div class="vbody">
-              <h3 class="vtitle">Audi A4</h3>
-              <p class="vmeta">2019 • Benzin • Automatik • 62.000 km</p>
-              <div class="tagrow">
-                <span class="tag">Limousine</span><span class="tag">LED</span><span class="tag">PDC</span>
-              </div>
-              <div class="price">21.700 €</div>
-            </div>
-          </article>
-
-          <article class="card vcard" data-category="kombi" data-search="vw passat kombi diesel 2018 dsg">
-            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
-            <div class="vbody">
-              <h3 class="vtitle">VW Passat Variant</h3>
-              <p class="vmeta">2018 • Diesel • DSG • 109.000 km</p>
-              <div class="tagrow">
-                <span class="tag">Kombi</span><span class="tag">AHK</span><span class="tag">Klima</span>
-              </div>
-              <div class="price">16.990 €</div>
-            </div>
-          </article>
-
-          <article class="card vcard" data-category="kleinwagen" data-search="opel corsa kleinwagen benziner 2021">
-            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
-            <div class="vbody">
-              <h3 class="vtitle">Opel Corsa</h3>
-              <p class="vmeta">2021 • Benzin • Schalter • 31.000 km</p>
-              <div class="tagrow">
-                <span class="tag">Kleinwagen</span><span class="tag">CarPlay</span><span class="tag">Tempomat</span>
-              </div>
-              <div class="price">12.450 €</div>
-            </div>
-          </article>
-
-          <article class="card vcard" data-category="suv" data-search="skoda kodiaq suv diesel 2022 7 sitzer">
-            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
-            <div class="vbody">
-              <h3 class="vtitle">Škoda Kodiaq</h3>
-              <p class="vmeta">2022 • Diesel • Automatik • 24.000 km</p>
-              <div class="tagrow">
-                <span class="tag">SUV</span><span class="tag">7-Sitzer</span><span class="tag">Kamera</span>
-              </div>
-              <div class="price">32.900 €</div>
-            </div>
-          </article>
-
-          <article class="card vcard" data-category="limousine" data-search="mercedes c klasse limousine diesel 2017">
-            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
-            <div class="vbody">
-              <h3 class="vtitle">Mercedes C-Klasse</h3>
-              <p class="vmeta">2017 • Diesel • Automatik • 128.000 km</p>
-              <div class="tagrow">
-                <span class="tag">Limousine</span><span class="tag">Sitzheizung</span><span class="tag">Navi</span>
-              </div>
-              <div class="price">14.800 €</div>
-            </div>
-          </article>
-        </div>
-
-        <p class="note">
-          Wenn du später echte Bilder willst: ersetze in jeder Karte das <code>.vimg</code> durch ein <code>&lt;img&gt;</code>.
+    <!-- ROUTED VIEWS -->
+<!-- ÜBER UNS -->
+<section class="panel" style="margin-bottom:26px;">
+  <div class="panel-head">
+    <h2>Über uns <small>Reichstein Automobile</small></h2>
+  </div>
+  <div class="panel-body">
+    <div class="grid">
+      <div style="grid-column: span 7;">
+        <p class="muted" style="font-size:14px; line-height:1.6;">
+          Seit über <b>20 Jahren</b> steht <b>Reichstein Automobile</b> für
+          Premium-Gebrauchtwagen in Berlin. Unser Fokus liegt auf
+          hochwertigen Fahrzeugen, transparenter Beratung und einem
+          sicheren Kaufgefühl.
+        </p>
+        <p class="muted" style="font-size:14px; line-height:1.6;">
+          Unser Ziel ist es, nicht nur ein Auto zu verkaufen, sondern das
+          <b>passende Fahrzeug</b> für Ihre Bedürfnisse zu finden –
+          zuverlässig, ehrlich und auf Augenhöhe.
         </p>
       </div>
-    </section>
 
-    <section id="service">
-      <div class="container">
-        <div class="section-title">
-          <div>
-            <h2>Service</h2>
-            <p class="subtitle">Leistungen, die du schnell anpassen kannst.</p>
+      <div style="grid-column: span 5;">
+        <div class="list">
+          <div class="li"><span>✔ Premium-Marken</span><b>BMW · Mercedes · Porsche · Audi</b></div>
+          <div class="li"><span>✔ Großer Fahrzeugbestand</span><b>ständig verfügbar</b></div>
+          <div class="li"><span>✔ Faire Preise</span><b>transparent & marktgerecht</b></div>
+          <div class="li"><span>✔ Sicherheit</span><b>sorgfältig geprüft</b></div>
+          <div class="li"><span>✔ Beratung</span><b>persönlich & ehrlich</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    <section id="viewCars">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Fahrzeugsuche <small>Filter • Sortierung • Favoriten • Vergleich</small></h2>
+          <div class="kpis">
+            <span class="chip">Treffer: <b id="hitCount">0</b></span>
+            <span class="chip">Seite: <b id="pageInfo">1</b></span>
           </div>
         </div>
-
-        <div class="row">
-          <div class="card" style="padding:16px">
-            <div class="list">
-              <div class="li">
-                <div class="icon" aria-hidden="true">🛠️</div>
-                <div>
-                  <strong>Werkstatt & Inspektion</strong>
-                  <span>Service, HU/AU-Vorbereitung, Checks nach Absprache.</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">💶</div>
-                <div>
-                  <strong>Finanzierung & Leasing</strong>
-                  <span>Individuelle Angebote je nach Fahrzeug & Laufzeit.</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">🔁</div>
-                <div>
-                  <strong>Ankauf / Inzahlungnahme</strong>
-                  <span>Schnelle Bewertung – transparent & fair.</span>
-                </div>
-              </div>
+        <div class="panel-body">
+          <form id="filterForm" class="filters" autocomplete="off">
+            <div class="field span-6">
+              <label for="q">Suche (Marke / Modell / Stichwort)</label>
+              <input class="control" id="q" name="q" placeholder="z.B. BMW 3er, Avant, AMG, Panorama..." />
             </div>
-          </div>
 
-          <div class="card" style="padding:16px">
-            <h3 style="margin:0 0 8px">So läuft eine Anfrage ab</h3>
-            <p class="subtitle" style="margin-bottom:10px">
-              Kurz & klar – damit Kunden wissen, was passiert.
-            </p>
-            <div class="list">
-              <div class="li">
-                <div class="icon" aria-hidden="true">1</div>
-                <div>
-                  <strong>Fahrzeug auswählen</strong>
-                  <span>Oder einfach Wunsch/Anforderung schreiben.</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">2</div>
-                <div>
-                  <strong>Kontakt senden</strong>
-                  <span>Per Formular, Mail oder WhatsApp.</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">3</div>
-                <div>
-                  <strong>Antwort erhalten</strong>
-                  <span>Mit Preis, Details, Terminoptionen.</span>
-                </div>
+            <div class="field span-3">
+              <label for="make">Marke</label>
+              <select class="control" id="make" name="make"></select>
+            </div>
+
+            <div class="field span-3">
+              <label for="fuel">Kraftstoff</label>
+              <select class="control" id="fuel" name="fuel"></select>
+            </div>
+
+            <div class="field span-3">
+              <label for="gear">Getriebe</label>
+              <select class="control" id="gear" name="gear"></select>
+            </div>
+
+            <div class="field span-3">
+              <label for="yearMin">Erstzulassung (von)</label>
+              <select class="control" id="yearMin" name="yearMin"></select>
+            </div>
+
+            <div class="field span-3">
+              <label for="yearMax">Erstzulassung (bis)</label>
+              <select class="control" id="yearMax" name="yearMax"></select>
+            </div>
+
+            <div class="field span-3">
+              <label>Preis (€)</label>
+              <div class="range">
+                <input class="control" id="priceMin" name="priceMin" placeholder="min" inputmode="numeric" />
+                <input class="control" id="priceMax" name="priceMax" placeholder="max" inputmode="numeric" />
               </div>
             </div>
 
-            <p class="note">Du kannst diese Texte später 1:1 ersetzen.</p>
-          </div>
+            <div class="field span-3">
+              <label>Kilometer</label>
+              <div class="range">
+                <input class="control" id="kmMin" name="kmMin" placeholder="min" inputmode="numeric" />
+                <input class="control" id="kmMax" name="kmMax" placeholder="max" inputmode="numeric" />
+              </div>
+            </div>
+
+            <div class="field span-3">
+              <label for="sort">Sortierung</label>
+              <select class="control" id="sort" name="sort">
+                <option value="newest">Neueste zuerst</option>
+                <option value="price_asc">Preis aufsteigend</option>
+                <option value="price_desc">Preis absteigend</option>
+                <option value="km_asc">KM aufsteigend</option>
+                <option value="km_desc">KM absteigend</option>
+                <option value="year_desc">EZ neu → alt</option>
+                <option value="year_asc">EZ alt → neu</option>
+              </select>
+            </div>
+
+            <div class="field span-3">
+              <label for="perPage">Pro Seite</label>
+              <select class="control" id="perPage" name="perPage">
+                <option>9</option>
+                <option>12</option>
+                <option>18</option>
+              </select>
+            </div>
+
+            <div class="field span-12">
+              <div class="actions">
+                <div class="actions-left">
+                  <button type="submit" class="btn primary">Filter anwenden</button>
+                  <button type="button" class="btn ghost" id="btnReset">Zurücksetzen</button>
+                  <button type="button" class="btn" id="btnOnlyFav">Nur Favoriten</button>
+                  <button type="button" class="btn" id="btnOnlyNew">Neu (≤ 14 Tage)</button>
+                </div>
+                <div class="kpis">
+                  <span class="chip">Favoriten: <b id="kpiFav">0</b></span>
+                  <span class="chip">Vergleich: <b id="kpiCmp">0</b></span>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <h2>Ergebnisse</h2>
+        <div class="kpis">
+          <span class="chip">Tipp: Klick auf ein Fahrzeug für Details</span>
+        </div>
+      </div>
+
+      <div class="grid" id="resultsGrid" aria-live="polite"></div>
+
+      <div class="pager">
+        <div class="kpis">
+          <span class="chip">Anzeige: <b id="showingInfo">–</b></span>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="btnPrev">← Zurück</button>
+          <button class="btn" id="btnNext">Weiter →</button>
         </div>
       </div>
     </section>
 
-    <section id="ueberuns">
-      <div class="container">
-        <div class="section-title">
-          <div>
-            <h2>Über uns</h2>
-            <p class="subtitle">Kurzer Textblock für Vertrauen – später anpassen.</p>
+    <!-- Favoriten view -->
+    <section id="viewFav" class="hide">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Favoriten <small>Deine gemerkten Fahrzeuge</small></h2>
+          <div class="kpis">
+            <span class="chip">Gespeichert: <b id="favCount2">0</b></span>
+            <button class="btn danger" id="btnClearFav">Favoriten löschen</button>
           </div>
         </div>
-
-        <div class="card" style="padding:18px">
-          <p style="margin:0; color:var(--muted)">
-            Reichstein Automobile steht für transparente Beratung und eine einfache Abwicklung.
-            Hier kannst du ein paar Sätze zu Geschichte, Standort, Spezialisierung und Philosophie ergänzen.
-          </p>
+        <div class="panel-body">
+          <div class="grid" id="favGrid"></div>
+          <div class="muted" id="favEmpty">Noch keine Favoriten. Öffne die Fahrzeugsuche und klicke auf das ★.</div>
         </div>
       </div>
     </section>
 
-    <section id="kontakt">
-      <div class="container">
-        <div class="section-title">
-          <div>
-            <h2>Kontakt</h2>
-            <p class="subtitle">Schreibe uns – wir melden uns zurück.</p>
+    <!-- Vergleich view -->
+    <section id="viewCompare" class="hide">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Vergleich <small>Bis zu 3 Fahrzeuge nebeneinander</small></h2>
+          <div class="kpis">
+            <span class="chip">Ausgewählt: <b id="cmpCount2">0</b></span>
+            <button class="btn ghost" id="btnClearCmp">Vergleich leeren</button>
           </div>
         </div>
+        <div class="panel-body">
+          <div id="cmpWrap"></div>
+          <div class="muted" id="cmpEmpty">Noch kein Vergleich. In der Fahrzeugsuche „Vergleich“ hinzufügen.</div>
+        </div>
+      </div>
+    </section>
 
-        <div class="row">
-          <div class="card" style="padding:16px">
-            <h3 style="margin:0 0 10px">Kontaktformular</h3>
-            <form id="contactForm">
-              <label class="input">
-                <span class="sr">Name</span>
-                <input id="name" name="name" placeholder="Dein Name" autocomplete="name" required />
-              </label>
-              <label class="input">
-                <span class="sr">E-Mail</span>
-                <input id="email" name="email" type="email" placeholder="Deine E-Mail" autocomplete="email" required />
-              </label>
-              <label class="input">
-                <span class="sr">Telefon</span>
-                <input id="phone" name="phone" placeholder="Telefon (optional)" autocomplete="tel" />
-              </label>
-              <textarea id="message" name="message" placeholder="Deine Nachricht..." required></textarea>
-
-              <button class="btn primary" type="submit">Nachricht per E-Mail senden</button>
-              <div class="note">
-                Hinweis: Dieses Formular nutzt <code>mailto:</code> (öffnet dein Mailprogramm).
-                Für echtes Server-Formular später: Netlify Forms, Formspree oder eigenes Backend.
-              </div>
-            </form>
-          </div>
-
-          <div class="card" style="padding:16px">
-            <h3 style="margin:0 0 10px">Direkt</h3>
-            <div class="list">
-              <div class="li">
-                <div class="icon" aria-hidden="true">📞</div>
-                <div>
-                  <strong>Telefon</strong>
-                  <span><a href="tel:+491234567890">+49 123 4567890</a></span>
+    <!-- Kontakt view -->
+    <section id="viewContact" class="hide">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Kontakt <small>Anfrage senden • Probefahrt • Rückruf</small></h2>
+        </div>
+        <div class="panel-body">
+          <form id="contactForm" class="filters">
+            <div class="field span-4">
+              <label for="cName">Name</label>
+              <input class="control" id="cName" required placeholder="Max Mustermann" />
+            </div>
+            <div class="field span-4">
+              <label for="cEmail">E-Mail</label>
+              <input class="control" id="cEmail" type="email" required placeholder="max@mail.de" />
+            </div>
+            <div class="field span-4">
+              <label for="cPhone">Telefon (optional)</label>
+              <input class="control" id="cPhone" placeholder="+49..." />
+            </div>
+            <div class="field span-12">
+              <label for="cMsg">Nachricht</label>
+              <textarea class="control" id="cMsg" rows="5" required placeholder="Worum geht es? Wunschfahrzeug, Finanzierung, Probefahrt..."></textarea>
+            </div>
+            <div class="field span-12">
+              <div class="actions">
+                <div class="actions-left">
+                  <button class="btn primary" type="submit">Nachricht senden</button>
+                  <button class="btn ghost" type="button" id="btnContactDemo">Demo ausfüllen</button>
                 </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">✉️</div>
-                <div>
-                  <strong>E-Mail</strong>
-                  <span><a href="mailto:info@reichstein-automobile.de">info@reichstein-automobile.de</a></span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">📍</div>
-                <div>
-                  <strong>Adresse</strong>
-                  <span>Musterstraße 1, 12345 Musterstadt</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="icon" aria-hidden="true">🗺️</div>
-                <div>
-                  <strong>Maps</strong>
-                  <span>
-                    <a href="https://www.google.com/maps?q=Musterstra%C3%9Fe+1+12345+Musterstadt" target="_blank" rel="noopener">
-                      Route planen
-                    </a>
-                  </span>
+                <div class="kpis">
+                  <span class="chip">Hinweis: In Teil 2 ist E-Mail-Versand als Beispiel enthalten.</span>
                 </div>
               </div>
             </div>
+          </form>
 
-            <div style="margin-top:12px">
-              <a class="btn" href="#fahrzeuge">Zurück zu Fahrzeuge</a>
-              <a class="btn" href="#top" style="margin-left:8px">Nach oben</a>
+          <div class="divider"></div>
+
+          <div class="filters">
+            <div class="field span-6">
+              <label>Adresse</label>
+              <div class="control" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <span class="muted" id="addressDisplay"></span>
+                <button class="btn" type="button" id="btnCopyAddress">Adresse kopieren</button>
+              </div>
+            </div>
+            <div class="field span-6">
+              <label>Telefon / WhatsApp</label>
+              <div class="control" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <span class="muted" id="phoneDisplay"></span>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button class="btn" type="button" id="btnCall">Anrufen</button>
+                  <button class="btn primary" type="button" id="btnWhatsapp">WhatsApp</button>
+                </div>
+              </div>
+            </div>
+            <div class="field span-12">
+              <label>Map (optional)</label>
+              <div class="control" style="min-height:220px; display:grid; place-items:center;">
+                <div class="control" style="min-height:220px; padding:12px;">
+  <div id="mapConsent">
+    <div class="muted" style="margin-bottom:10px;">
+      Karte wird erst nach Zustimmung geladen (Datenschutz).
+    </div>
+    <button class="btn primary" type="button" id="btnLoadMap">Google Maps laden</button>
+    <div class="muted" style="margin-top:10px; font-size:12px;">
+      Mit dem Laden der Karte können Daten an Google übertragen werden.
+    </div>
+  </div>
+
+  <div id="mapFrame" class="hide" style="height:220px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.10);">
+    <!-- iframe wird per JS gesetzt -->
+  </div>
+</div>
+              </div>
             </div>
           </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Inzahlungnahme view -->
+    <section id="viewTrade" class="hide">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Inzahlungnahme <small>Mehrstufig • Daten • Zustand • Upload • Abschicken</small></h2>
+          <div class="kpis">
+            <span class="chip">Schritt: <b id="tradeStepInfo">1</b>/4</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div id="tradeWizard"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechtliches -->
+    <section id="viewLegal" class="hide">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 id="legalTitle">Impressum</h2>
+        </div>
+        <div class="panel-body" id="legalBody">
+          <!-- Teil 2 füllt Inhalte + Template ein -->
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Floating buttons (edit WhatsApp number) -->
-  <div class="floating" aria-label="Schnellaktionen">
-    <a class="fab" href="mailto:info@reichstein-automobile.de" title="E-Mail">
-      ✉️
-      <span class="sr">E-Mail</span>
-    </a>
-    <a class="fab primary" id="waBtn" href="#" title="WhatsApp">
-      💬
-      <span class="sr">WhatsApp</span>
-    </a>
-  </div>
-
-  <footer class="foot">
-    <div class="container">
-      <div class="inner">
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
         <div>
-          <strong style="color:var(--text)">Reichstein Automobile</strong><br/>
-          <span>© <span id="year"></span> • Alle Rechte vorbehalten</span>
+          <h4>Reichstein Automobile</h4>
+          <div class="muted">Edle Online-Präsenz • Fahrzeugsuche • Inzahlungnahme • Kontakt</div>
+          <div class="muted" style="margin-top:10px;">© <span id="yearNow"></span> Reichstein Automobile</div>
         </div>
-        <div class="smalllinks">
-          <a href="#kontakt">Kontakt</a>
-          <a href="#" onclick="alert('Impressum: Hier später einfügen (z.B. eigene Seite oder Abschnitt).'); return false;">Impressum</a>
-          <a href="#" onclick="alert('Datenschutz: Hier später einfügen (z.B. eigene Seite oder Abschnitt).'); return false;">Datenschutz</a>
+        <div>
+          <h4>Navigation</h4>
+          <a href="#/fahrzeuge">Fahrzeuge</a>
+          <a href="#/favoriten">Favoriten</a>
+          <a href="#/vergleich">Vergleich</a>
+          <a href="#/inzahlungnahme">Inzahlungnahme</a>
+          <a href="#/kontakt">Kontakt</a>
+        </div>
+        <div>
+          <h4>Rechtliches</h4>
+          <a href="#/impressum">Impressum</a>
+          <a href="#/datenschutz">Datenschutz</a>
         </div>
       </div>
     </div>
   </footer>
 
+  <!-- Vehicle Details Modal -->
+  <div class="overlay" id="detailsOverlay" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="detailsTitle">Fahrzeugdetails</h3>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" id="btnDetailsFav">★ Favorit</button>
+          <button class="btn" id="btnDetailsCmp">⇄ Vergleich</button>
+          <button class="btn ghost" id="btnCloseDetails">Schließen ✕</button>
+        </div>
+      </div>
+      <div class="modal-body" id="detailsBody">
+        <!-- Teil 2: Details-Inhalt wird dynamisch gebaut -->
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    // Jahr
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // =========================
+// Reichstein – Konfiguration (Firmendaten)
+// =========================
+const CONFIG = {
+  company: "Reichstein Automobile",
+  street: "Koloniestr. 91–93",
+  zipCity: "13359 Berlin",
+  phoneDisplay: "030 – 74374315",
+  phoneTel: "+493074374315",            // für tel: Links
+  email: "info@reichsteinautomobile.de",
+  whatsappE164: "493074374315",         // WhatsApp Landline (falls WA Business aktiv)
+  hours: [
+    ["Montag", "09:30 – 18:30"],
+    ["Dienstag", "09:30 – 18:30"],
+    ["Mittwoch", "09:30 – 18:30"],
+    ["Donnerstag", "09:30 – 18:30"],
+    ["Freitag", "09:30 – 18:30"],
+    ["Samstag", "09:30 – 15:00"],
+    ["Sonntag", "Geschlossen"]
+  ],
+  // Google Maps: Adresse als Query
+  mapsQuery: "Reichstein Automobile, Koloniestr. 91-93, 13359 Berlin"
+};
+    const VEHICLES = [
+      {
+        id: "ra-1001",
+        make: "BMW",
+        model: "320d Touring",
+        trim: "M Sport",
+        price: 28990,
+        year: 2020,
+        km: 69900,
+        fuel: "Diesel",
+        gear: "Automatik",
+        power: 190,
+        color: "Schwarz",
+        doors: 5,
+        owners: 2,
+        firstReg: "2020-05",
+        createdAt: daysAgo(3),
+        images: [
+          "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&q=70"
+        ],
+        features: ["LED-Scheinwerfer", "Navigation", "Sportfahrwerk", "Sitzheizung", "PDC", "Tempomat", "Bluetooth"],
+        notes: "Scheckheft gepflegt, Top Zustand. Finanzierung möglich."
+      },
+      {
+        id: "ra-1002",
+        make: "Audi",
+        model: "A4 Avant",
+        trim: "S line",
+        price: 26990,
+        year: 2019,
+        km: 84500,
+        fuel: "Benzin",
+        gear: "Automatik",
+        power: 190,
+        color: "Grau",
+        doors: 5,
+        owners: 1,
+        firstReg: "2019-09",
+        createdAt: daysAgo(9),
+        images: [
+          "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1517524206127-48bbd363f3f7?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1523983388277-336a66bf9bcd?auto=format&fit=crop&w=1400&q=70"
+        ],
+        features: ["Virtual Cockpit", "Navigation", "S line", "Sitzheizung", "Kamera", "Keyless", "CarPlay"],
+        notes: "Sehr gepflegt, Nichtraucherfahrzeug."
+      },
+      {
+        id: "ra-1003",
+        make: "Mercedes-Benz",
+        model: "C 220d",
+        trim: "AMG Line",
+        price: 31990,
+        year: 2021,
+        km: 49900,
+        fuel: "Diesel",
+        gear: "Automatik",
+        power: 200,
+        color: "Weiß",
+        doors: 4,
+        owners: 1,
+        firstReg: "2021-03",
+        createdAt: daysAgo(1),
+        images: [
+          "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1520052205864-92d242b3a76b?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1400&q=70"
+        ],
+        features: ["AMG Line", "MBUX", "LED", "Sitzheizung", "Tempomat", "PDC", "Bluetooth"],
+        notes: "Top Ausstattung. Probefahrt nach Termin."
+      },
+      {
+        id: "ra-1004",
+        make: "Volkswagen",
+        model: "Golf VII",
+        trim: "Highline",
+        price: 15990,
+        year: 2018,
+        km: 98000,
+        fuel: "Benzin",
+        gear: "Schaltgetriebe",
+        power: 125,
+        color: "Blau",
+        doors: 5,
+        owners: 2,
+        firstReg: "2018-06",
+        createdAt: daysAgo(22),
+        images: [
+          "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1400&q=70"
+        ],
+        features: ["Navigation", "Sitzheizung", "Tempomat", "Bluetooth", "PDC"],
+        notes: "Preis-Leistung stark. Sofort verfügbar."
+      },
+      {
+        id: "ra-1005",
+        make: "Tesla",
+        model: "Model 3",
+        trim: "Long Range",
+        price: 34990,
+        year: 2020,
+        km: 65000,
+        fuel: "Elektro",
+        gear: "Automatik",
+        power: 351,
+        color: "Rot",
+        doors: 4,
+        owners: 1,
+        firstReg: "2020-11",
+        createdAt: daysAgo(12),
+        images: [
+          "https://images.unsplash.com/photo-1619767886558-efdc259cde1d?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1603386329225-868f9b1ee6d9?auto=format&fit=crop&w=1400&q=70"
+        ],
+        features: ["Autopilot", "Glasdach", "Kamera", "Navi", "App-Steuerung"],
+        notes: "Sehr guter Zustand. Ladeequipment dabei."
+      },
+      {
+        id: "ra-1006",
+        make: "Porsche",
+        model: "Macan",
+        trim: "S",
+        price: 58900,
+        year: 2019,
+        km: 72000,
+        fuel: "Benzin",
+        gear: "Automatik",
+        power: 354,
+        color: "Schwarz",
+        doors: 5,
+        owners: 2,
+        firstReg: "2019-02",
+        createdAt: daysAgo(5),
+        images: [
+          "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1400&q=70",
+          "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1400&q=70"
+        ],
+        features: ["Sport Chrono", "PASM", "Panorama", "Kamera", "Sitzbelüftung", "Navi"],
+        notes: "Premium SUV, sehr gepflegt."
+      }
+    ];
 
-    // WhatsApp Link (Nummer ändern!)
-    // Format: Ländercode ohne +, ohne Leerzeichen, z.B. 491701234567
-    const whatsappNumber = "491701234567";
-    const waText = encodeURIComponent("Hallo Reichstein Automobile, ich habe eine Anfrage:");
-    document.getElementById("waBtn").href = "https://wa.me/" + whatsappNumber + "?text=" + waText;
+    // =========================
+    // State
+    // =========================
+    const state = {
+      route: "#/fahrzeuge",
+      page: 1,
+      perPage: 9,
+      onlyFav: false,
+      onlyNew: false,
+      selectedVehicleId: null,
+      fav: new Set(loadLS("ra_fav", [])),
+      cmp: new Set(loadLS("ra_cmp", []))
+    };
 
-    // Fahrzeug Filter
-    const searchEl = document.getElementById("search");
-    const categoryEl = document.getElementById("category");
-    const cards = Array.from(document.querySelectorAll(".vcard"));
+    // =========================
+    // Helpers
+    // =========================
+    function daysAgo(n){
+      const d = new Date();
+      d.setDate(d.getDate() - n);
+      return d.toISOString();
+    }
+    function formatEUR(n){
+      return new Intl.NumberFormat("de-DE", { style:"currency", currency:"EUR", maximumFractionDigits: 0 }).format(n);
+    }
+    function formatKM(n){
+      return new Intl.NumberFormat("de-DE").format(n) + " km";
+    }
+    function clampInt(val, min, max){
+      const n = parseInt(String(val||"").replace(/[^\d]/g,""), 10);
+      if (Number.isNaN(n)) return null;
+      return Math.max(min, Math.min(max, n));
+    }
+    function uniq(arr){ return Array.from(new Set(arr)); }
+    function byId(id){ return document.getElementById(id); }
+    function saveLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+    function loadLS(key, fallback){
+      try{
+        const v = JSON.parse(localStorage.getItem(key) || "null");
+        return v ?? fallback;
+      }catch{ return fallback; }
+    }
+    function toast(msg, sub=""){
+      const wrap = byId("toast");
+      const el = document.createElement("div");
+      el.className = "t";
+      el.innerHTML = `<div><div>${escapeHtml(msg)}</div>${sub?`<small>${escapeHtml(sub)}</small>`:""}</div>
+                      <button class="iconbtn" aria-label="Toast schließen" style="width:32px;height:32px;">✕</button>`;
+      el.querySelector("button").onclick = ()=> el.remove();
+      wrap.appendChild(el);
+      setTimeout(()=>{ if (el.isConnected) el.remove(); }, 4200);
+    }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+    }
 
-    function applyFilter(){
-      const q = (searchEl.value || "").trim().toLowerCase();
-      const cat = categoryEl.value;
-      cards.forEach(card => {
-        const hay = (card.getAttribute("data-search") || "").toLowerCase();
-        const c = card.getAttribute("data-category") || "all";
-        const matchQ = !q || hay.includes(q);
-        const matchC = (cat === "all") || (c === cat);
-        card.style.display = (matchQ && matchC) ? "" : "none";
+    // =========================
+    // Init: Populate select options
+    // =========================
+    function initFilters(){
+      const makes = ["Alle", ...uniq(VEHICLES.map(v=>v.make)).sort()];
+      const fuels = ["Alle", ...uniq(VEHICLES.map(v=>v.fuel)).sort()];
+      const gears = ["Alle", ...uniq(VEHICLES.map(v=>v.gear)).sort()];
+
+      const years = uniq(VEHICLES.map(v=>v.year)).sort((a,b)=>a-b);
+      const yearOpts = ["Alle", ...years];
+
+      fillSelect("make", makes);
+      fillSelect("fuel", fuels);
+      fillSelect("gear", gears);
+      fillSelect("yearMin", yearOpts);
+      fillSelect("yearMax", yearOpts);
+
+      // defaults
+      byId("make").value = "Alle";
+      byId("fuel").value = "Alle";
+      byId("gear").value = "Alle";
+      byId("yearMin").value = "Alle";
+      byId("yearMax").value = "Alle";
+      byId("perPage").value = String(state.perPage);
+    }
+
+    function fillSelect(id, options){
+      const sel = byId(id);
+      sel.innerHTML = "";
+      for(const opt of options){
+        const o = document.createElement("option");
+        o.value = opt;
+        o.textContent = opt;
+        sel.appendChild(o);
+      }
+    }
+
+    // =========================
+    // Filtering, Sorting, Pagination
+    // =========================
+    function getFilters(){
+      const q = (byId("q").value || "").trim().toLowerCase();
+      const make = byId("make").value;
+      const fuel = byId("fuel").value;
+      const gear = byId("gear").value;
+      const yearMin = byId("yearMin").value === "Alle" ? null : parseInt(byId("yearMin").value, 10);
+      const yearMax = byId("yearMax").value === "Alle" ? null : parseInt(byId("yearMax").value, 10);
+      const priceMin = clampInt(byId("priceMin").value, 0, 9999999);
+      const priceMax = clampInt(byId("priceMax").value, 0, 9999999);
+      const kmMin = clampInt(byId("kmMin").value, 0, 9999999);
+      const kmMax = clampInt(byId("kmMax").value, 0, 9999999);
+      const sort = byId("sort").value;
+      const perPage = parseInt(byId("perPage").value, 10) || 9;
+
+      return { q, make, fuel, gear, yearMin, yearMax, priceMin, priceMax, kmMin, kmMax, sort, perPage };
+    }
+
+    function applyQuery(list, q){
+      if(!q) return list;
+      return list.filter(v=>{
+        const hay = `${v.make} ${v.model} ${v.trim} ${v.fuel} ${v.gear} ${v.notes} ${v.features.join(" ")}`.toLowerCase();
+        return hay.includes(q);
       });
     }
-    searchEl.addEventListener("input", applyFilter);
-    categoryEl.addEventListener("change", applyFilter);
 
-    // "Formular" via mailto:
-    const form = document.getElementById("contactForm");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const message = document.getElementById("message").value.trim();
+    function applyFilters(){
+      const f = getFilters();
+      state.perPage = f.perPage;
 
-      const to = "info@reichstein-automobile.de";
-      const subject = encodeURIComponent("Website-Anfrage – " + (name || "Unbekannt"));
-      const body = encodeURIComponent(
-        "Name: " + name + "\n" +
-        "E-Mail: " + email + "\n" +
-        "Telefon: " + (phone || "-") + "\n\n" +
-        "Nachricht:\n" + message + "\n"
-      );
+      let list = [...VEHICLES];
 
-      window.location.href = "mailto:" + to + "?subject=" + subject + "&body=" + body;
+      if(state.onlyFav){
+        list = list.filter(v=> state.fav.has(v.id));
+      }
+      if(state.onlyNew){
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - 14);
+        list = list.filter(v=> new Date(v.createdAt) >= cutoff);
+      }
+
+      list = applyQuery(list, f.q);
+      if(f.make !== "Alle") list = list.filter(v=> v.make === f.make);
+      if(f.fuel !== "Alle") list = list.filter(v=> v.fuel === f.fuel);
+      if(f.gear !== "Alle") list = list.filter(v=> v.gear === f.gear);
+      if(f.yearMin != null) list = list.filter(v=> v.year >= f.yearMin);
+      if(f.yearMax != null) list = list.filter(v=> v.year <= f.yearMax);
+      if(f.priceMin != null) list = list.filter(v=> v.price >= f.priceMin);
+      if(f.priceMax != null) list = list.filter(v=> v.price <= f.priceMax);
+      if(f.kmMin != null) list = list.filter(v=> v.km >= f.kmMin);
+      if(f.kmMax != null) list = list.filter(v=> v.km <= f.kmMax);
+
+      list = sortVehicles(list, f.sort);
+
+      return list;
+    }
+
+    function sortVehicles(list, mode){
+      const copy = [...list];
+      switch(mode){
+        case "price_asc": return copy.sort((a,b)=>a.price-b.price);
+        case "price_desc": return copy.sort((a,b)=>b.price-a.price);
+        case "km_asc": return copy.sort((a,b)=>a.km-b.km);
+        case "km_desc": return copy.sort((a,b)=>b.km-a.km);
+        case "year_asc": return copy.sort((a,b)=>a.year-b.year);
+        case "year_desc": return copy.sort((a,b)=>b.year-a.year);
+        case "newest":
+        default:
+          return copy.sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+      }
+    }
+
+    function paginate(list){
+      const total = list.length;
+      const perPage = state.perPage;
+      const pages = Math.max(1, Math.ceil(total / perPage));
+      state.page = Math.max(1, Math.min(state.page, pages));
+      const start = (state.page - 1) * perPage;
+      const end = start + perPage;
+      return { slice: list.slice(start, end), total, pages, start, end: Math.min(end, total) };
+    }
+
+    // =========================
+    // Render
+    // =========================
+    function render(){
+      // KPIs
+      byId("yearNow").textContent = new Date().getFullYear();
+      byId("kpiTotal").textContent = String(VEHICLES.length);
+      byId("kpiAvg").textContent = formatEUR(Math.round(VEHICLES.reduce((s,v)=>s+v.price,0)/VEHICLES.length));
+      byId("kpiNew").textContent = String(VEHICLES.filter(v=>{
+        const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-14);
+        return new Date(v.createdAt) >= cutoff;
+      }).length);
+
+      // counts
+      const favN = state.fav.size;
+      const cmpN = state.cmp.size;
+      byId("favCount").querySelector("b").textContent = String(favN);
+      byId("cmpCount").querySelector("b").textContent = String(cmpN);
+      byId("kpiFav").textContent = String(favN);
+      byId("kpiCmp").textContent = String(cmpN);
+      byId("favCount2").textContent = String(favN);
+      byId("cmpCount2").textContent = String(cmpN);
+
+      // route views
+      setActiveRouteView();
+
+      // cars view render
+      if(state.route === "#/fahrzeuge"){
+        const list = applyFilters();
+        const { slice, total, pages, start, end } = paginate(list);
+
+        byId("hitCount").textContent = String(total);
+        byId("pageInfo").textContent = `${state.page} / ${pages}`;
+        byId("showingInfo").textContent = total ? `${start+1}–${end} von ${total}` : "0";
+        renderGrid(byId("resultsGrid"), slice);
+
+        byId("btnPrev").disabled = (state.page <= 1);
+        byId("btnNext").disabled = (state.page >= pages);
+        byId("btnPrev").style.opacity = byId("btnPrev").disabled ? .55 : 1;
+        byId("btnNext").style.opacity = byId("btnNext").disabled ? .55 : 1;
+      }
+
+      // favorites view
+      if(state.route === "#/favoriten"){
+        const list = VEHICLES.filter(v=> state.fav.has(v.id));
+        byId("favEmpty").classList.toggle("hide", list.length !== 0);
+        renderGrid(byId("favGrid"), list);
+      }
+
+      // compare view
+      if(state.route === "#/vergleich"){
+        renderCompare();
+      }
+    }
+
+    function renderGrid(container, list){
+      container.innerHTML = "";
+      for(const v of list){
+        const el = document.createElement("article");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="thumb" role="button" tabindex="0" aria-label="Details öffnen: ${escapeHtml(v.make)} ${escapeHtml(v.model)}">
+            <img src="${escapeHtml(v.images?.[0] || "")}" alt="${escapeHtml(v.make+" "+v.model)}" loading="lazy">
+            <div class="tagbar">
+              <div class="tag"><span class="dot"></span>${escapeHtml(v.fuel)} • ${escapeHtml(v.gear)}</div>
+              <div class="tag price">${escapeHtml(formatEUR(v.price))}</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="title">
+              <div>
+                <h3>${escapeHtml(v.make)} ${escapeHtml(v.model)} <span class="muted">• ${escapeHtml(v.trim)}</span></h3>
+                <div class="sub">${escapeHtml(String(v.year))} • ${escapeHtml(formatKM(v.km))} • ${escapeHtml(v.power)} PS</div>
+              </div>
+              <button class="iconbtn ${state.fav.has(v.id) ? "active":""}" aria-label="Favorit" title="Favorit" data-fav="${escapeHtml(v.id)}">★</button>
+            </div>
+
+            <div class="specs">
+              <div class="spec"><span>Erstzulassung</span><b>${escapeHtml(v.firstReg)}</b></div>
+              <div class="spec"><span>Farbe</span><b>${escapeHtml(v.color)}</b></div>
+              <div class="spec"><span>Vorbesitzer</span><b>${escapeHtml(String(v.owners))}</b></div>
+            </div>
+          </div>
+          <div class="card-foot">
+            <button class="btn primary" data-open="${escapeHtml(v.id)}">Details</button>
+            <button class="btn ${state.cmp.has(v.id) ? "primary":""}" data-cmp="${escapeHtml(v.id)}">⇄ Vergleich</button>
+            <button class="btn" data-ask="${escapeHtml(v.id)}">Anfrage</button>
+          </div>
+        `;
+
+        // thumb click open
+        const thumb = el.querySelector(".thumb");
+        thumb.addEventListener("click", ()=> openDetails(v.id));
+        thumb.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDetails(v.id);} });
+
+        // buttons
+        el.querySelector("[data-open]").addEventListener("click", ()=> openDetails(v.id));
+        el.querySelector("[data-ask]").addEventListener("click", ()=> quickInquiry(v.id));
+        el.querySelector("[data-fav]").addEventListener("click", (e)=>{ e.stopPropagation(); toggleFav(v.id); });
+        el.querySelector("[data-cmp]").addEventListener("click", (e)=>{ e.stopPropagation(); toggleCmp(v.id); });
+
+        container.appendChild(el);
+      }
+    }
+
+    // =========================
+    // Favorites / Compare
+    // =========================
+    function toggleFav(id){
+      if(state.fav.has(id)){
+        state.fav.delete(id);
+        toast("Aus Favoriten entfernt", id);
+      }else{
+        state.fav.add(id);
+        toast("Zu Favoriten hinzugefügt", id);
+      }
+      saveLS("ra_fav", Array.from(state.fav));
+      render();
+    }
+
+    function toggleCmp(id){
+      if(state.cmp.has(id)){
+        state.cmp.delete(id);
+        toast("Aus Vergleich entfernt", id);
+      }else{
+        if(state.cmp.size >= 3){
+          toast("Vergleich ist voll", "Maximal 3 Fahrzeuge gleichzeitig.");
+          return;
+        }
+        state.cmp.add(id);
+        toast("Zum Vergleich hinzugefügt", id);
+      }
+      saveLS("ra_cmp", Array.from(state.cmp));
+      render();
+    }
+
+    function renderCompare(){
+      const wrap = byId("cmpWrap");
+      const ids = Array.from(state.cmp);
+      const cars = ids.map(id=> VEHICLES.find(v=>v.id===id)).filter(Boolean);
+
+      byId("cmpEmpty").classList.toggle("hide", cars.length !== 0);
+
+      if(!cars.length){
+        wrap.innerHTML = "";
+        return;
+      }
+
+      // Build comparison table
+      const rows = [
+        ["Preis", (v)=>formatEUR(v.price)],
+        ["Marke/Modell", (v)=>`${v.make} ${v.model}`],
+        ["Variante", (v)=>v.trim],
+        ["Erstzulassung", (v)=>String(v.year)],
+        ["Kilometer", (v)=>formatKM(v.km)],
+        ["Kraftstoff", (v)=>v.fuel],
+        ["Getriebe", (v)=>v.gear],
+        ["Leistung", (v)=>`${v.power} PS`],
+        ["Farbe", (v)=>v.color],
+        ["Vorbesitzer", (v)=>String(v.owners)]
+      ];
+
+      const header = `
+        <div class="grid" style="margin:0;">
+          ${cars.map(v=>`
+            <div class="card" style="grid-column: span 4;">
+              <div class="thumb">
+                <img src="${escapeHtml(v.images?.[0]||"")}" alt="${escapeHtml(v.make+" "+v.model)}">
+                <div class="tagbar">
+                  <div class="tag"><span class="dot"></span>${escapeHtml(v.fuel)} • ${escapeHtml(v.gear)}</div>
+                  <div class="tag price">${escapeHtml(formatEUR(v.price))}</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="title">
+                  <div>
+                    <h3>${escapeHtml(v.make)} ${escapeHtml(v.model)}</h3>
+                    <div class="sub">${escapeHtml(v.trim)} • ${escapeHtml(String(v.year))}</div>
+                  </div>
+                  <button class="iconbtn" title="Entfernen" data-rm="${escapeHtml(v.id)}">✕</button>
+                </div>
+                <div class="card-foot">
+                  <button class="btn primary" data-open="${escapeHtml(v.id)}">Details</button>
+                  <button class="btn" data-ask="${escapeHtml(v.id)}">Anfrage</button>
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      const body = `
+        <div class="panel" style="margin-top:12px;">
+          <div class="panel-head"><h2>Vergleichsdaten <small>Übersicht</small></h2></div>
+          <div class="panel-body" style="overflow:auto;">
+            <div style="min-width:760px;">
+              ${rows.map(([label, fn])=>`
+                <div class="li" style="grid-template-columns:1fr; margin-bottom:8px;">
+                  <div style="display:grid; grid-template-columns: 220px repeat(${cars.length}, 1fr); gap:10px; align-items:center;">
+                    <span>${escapeHtml(label)}</span>
+                    ${cars.map(v=>`<b style="font-weight:700;">${escapeHtml(fn(v))}</b>`).join("")}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+
+      wrap.innerHTML = header + body;
+
+      wrap.querySelectorAll("[data-open]").forEach(btn=>{
+        btn.addEventListener("click", ()=> openDetails(btn.getAttribute("data-open")));
+      });
+      wrap.querySelectorAll("[data-ask]").forEach(btn=>{
+        btn.addEventListener("click", ()=> quickInquiry(btn.getAttribute("data-ask")));
+      });
+      wrap.querySelectorAll("[data-rm]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          state.cmp.delete(btn.getAttribute("data-rm"));
+          saveLS("ra_cmp", Array.from(state.cmp));
+          render();
+        });
+      });
+    }
+
+    // =========================
+    // Details modal (Teil 2 baut den Inhalt komplett aus)
+    // =========================
+    function openDetails(id){
+      state.selectedVehicleId = id;
+      byId("detailsOverlay").classList.add("show");
+      byId("detailsBody").innerHTML = `
+        <div class="muted">Lade Details…</div>
+        <div class="divider"></div>
+        <div class="muted">In Teil 2 werden hier Galerie, Ausstattung, Anfrage-CTA, WhatsApp/Telefon etc. gerendert.</div>
+      `;
+
+      const v = VEHICLES.find(x=>x.id===id);
+      byId("detailsTitle").textContent = v ? `${v.make} ${v.model} • ${v.trim}` : "Fahrzeugdetails";
+
+      // update action buttons states
+      byId("btnDetailsFav").classList.toggle("primary", state.fav.has(id));
+      byId("btnDetailsCmp").classList.toggle("primary", state.cmp.has(id));
+
+      // In Teil 2: renderDetails(v)
+      // Für jetzt: Minimal-Preview
+      if(v){
+        byId("detailsBody").innerHTML = `
+          <div class="two-col">
+            <div class="gallery">
+              <div class="gallery-main">
+                <img src="${escapeHtml(v.images?.[0]||"")}" alt="${escapeHtml(v.make+" "+v.model)}">
+              </div>
+              <div class="gallery-strip">
+                ${(v.images||[]).map((src,i)=>`
+                  <div class="thumb2 ${i===0?"active":""}">
+                    <img src="${escapeHtml(src)}" alt="Bild ${i+1}">
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+
+            <div class="sidebox">
+              <div>
+                <div class="muted">Preis</div>
+                <div class="pricebig">${escapeHtml(formatEUR(v.price))}</div>
+                <div class="muted" style="margin-top:4px;">${escapeHtml(String(v.year))} • ${escapeHtml(formatKM(v.km))} • ${escapeHtml(v.power)} PS</div>
+              </div>
+
+              <div class="list">
+                <div class="li"><span>Kraftstoff</span><b>${escapeHtml(v.fuel)}</b></div>
+                <div class="li"><span>Getriebe</span><b>${escapeHtml(v.gear)}</b></div>
+                <div class="li"><span>Farbe</span><b>${escapeHtml(v.color)}</b></div>
+                <div class="li"><span>Vorbesitzer</span><b>${escapeHtml(String(v.owners))}</b></div>
+              </div>
+
+              <button class="btn primary" onclick="quickInquiry('${escapeHtml(v.id)}')">Anfrage senden</button>
+              <button class="btn" onclick="toggleFav('${escapeHtml(v.id)}')">★ Favorit</button>
+              <button class="btn" onclick="toggleCmp('${escapeHtml(v.id)}')">⇄ Vergleich</button>
+
+              <div class="muted" style="font-size:12px;">
+                Hinweis: In Teil 2 kommen WhatsApp/Telefon-Buttons + Ausstattungsliste + Beschreibung.
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function closeDetails(){
+      byId("detailsOverlay").classList.remove("show");
+      state.selectedVehicleId = null;
+    }
+
+    // =========================
+    // Quick inquiry (Teil 2 erweitert zu sauberem Formular mit Fahrzeugbezug)
+    // =========================
+    function quickInquiry(id){
+      const v = VEHICLES.find(x=>x.id===id);
+      location.hash = "#/kontakt";
+      setTimeout(()=>{
+        byId("cMsg").value = v
+          ? `Hallo, ich interessiere mich für: ${v.make} ${v.model} (${v.trim}) – ID: ${v.id}. Bitte um Rückmeldung.`
+          : "Hallo, ich interessiere mich für ein Fahrzeug. Bitte um Rückmeldung.";
+        toast("Kontaktformular vorbereitet", v ? `${v.make} ${v.model}` : "");
+      }, 60);
+    }
+
+    // =========================
+    // Router (hash-based)
+    // =========================
+    function setRoute(hash){
+      state.route = hash || "#/fahrzeuge";
+      // reset page when changing primary list views
+      if(state.route === "#/fahrzeuge") state.page = 1;
+      render();
+      // scroll top of main
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function setActiveRouteView(){
+      const r = state.route;
+
+      // toggle views
+      byId("viewCars").classList.toggle("hide", r !== "#/fahrzeuge");
+      byId("viewFav").classList.toggle("hide", r !== "#/favoriten");
+      byId("viewCompare").classList.toggle("hide", r !== "#/vergleich");
+      byId("viewContact").classList.toggle("hide", r !== "#/kontakt");
+      byId("viewTrade").classList.toggle("hide", r !== "#/inzahlungnahme");
+      byId("viewLegal").classList.toggle("hide", !(r === "#/impressum" || r === "#/datenschutz"));
+
+      // hero only on cars
+      byId("hero").classList.toggle("hide", r !== "#/fahrzeuge");
+
+      // nav active feel
+      const map = {
+        "#/fahrzeuge": "navCars",
+        "#/favoriten": "navFav",
+        "#/vergleich": "navCompare",
+        "#/kontakt": "navContact",
+        "#/inzahlungnahme": "navTrade"
+      };
+      Object.values(map).forEach(id=> byId(id).classList.remove("primary"));
+      if(map[r]) byId(map[r]).classList.add("primary");
+
+      // legal titles placeholder (Teil 2 füllt die Inhalte)
+      if(r === "#/impressum"){
+        byId("legalTitle").textContent = "Impressum";
+        byId("legalBody").innerHTML = `<div class="muted">In Teil 2: Impressum-Template (Platzhalter) + Struktur.</div>`;
+      }
+      if(r === "#/datenschutz"){
+        byId("legalTitle").textContent = "Datenschutz";
+        byId("legalBody").innerHTML = `<div class="muted">In Teil 2: Datenschutz-Template (Platzhalter) + Map-Consent-Hinweis.</div>`;
+      }
+
+      // trade wizard placeholder
+      if(r === "#/inzahlungnahme"){
+        byId("tradeWizard").innerHTML = `<div class="muted">In Teil 2: kompletter Multi-Step Wizard (4 Schritte) inkl. Upload-Felder & Zusammenfassung.</div>`;
+        byId("tradeStepInfo").textContent = "1";
+      }
+    }
+
+    // =========================
+    // Events
+    // =========================
+    function bindEvents(){
+      window.addEventListener("hashchange", ()=> setRoute(location.hash || "#/fahrzeuge"));
+
+      byId("filterForm").addEventListener("submit", (e)=>{
+        e.preventDefault();
+        state.page = 1;
+        render();
+        toast("Filter angewendet");
+      });
+
+      byId("btnReset").addEventListener("click", ()=>{
+        byId("q").value = "";
+        byId("make").value = "Alle";
+        byId("fuel").value = "Alle";
+        byId("gear").value = "Alle";
+        byId("yearMin").value = "Alle";
+        byId("yearMax").value = "Alle";
+        byId("priceMin").value = "";
+        byId("priceMax").value = "";
+        byId("kmMin").value = "";
+        byId("kmMax").value = "";
+        byId("sort").value = "newest";
+        byId("perPage").value = "9";
+        state.perPage = 9;
+        state.onlyFav = false;
+        state.onlyNew = false;
+        byId("btnOnlyFav").classList.remove("primary");
+        byId("btnOnlyNew").classList.remove("primary");
+        state.page = 1;
+        render();
+        toast("Zurückgesetzt");
+      });
+
+      byId("btnOnlyFav").addEventListener("click", ()=>{
+        state.onlyFav = !state.onlyFav;
+        byId("btnOnlyFav").classList.toggle("primary", state.onlyFav);
+        state.page = 1;
+        render();
+        toast(state.onlyFav ? "Nur Favoriten aktiv" : "Nur Favoriten aus");
+      });
+
+      byId("btnOnlyNew").addEventListener("click", ()=>{
+        state.onlyNew = !state.onlyNew;
+        byId("btnOnlyNew").classList.toggle("primary", state.onlyNew);
+        state.page = 1;
+        render();
+        toast(state.onlyNew ? "Neu-Filter aktiv" : "Neu-Filter aus", "Neu = ≤ 14 Tage");
+      });
+
+      byId("btnPrev").addEventListener("click", ()=>{
+        state.page = Math.max(1, state.page - 1);
+        render();
+        window.scrollTo({ top: byId("viewCars").offsetTop - 80, behavior: "smooth" });
+      });
+
+      byId("btnNext").addEventListener("click", ()=>{
+        state.page += 1;
+        render();
+        window.scrollTo({ top: byId("viewCars").offsetTop - 80, behavior: "smooth" });
+      });
+
+      byId("btnClearFav").addEventListener("click", ()=>{
+        state.fav.clear();
+        saveLS("ra_fav", []);
+        toast("Favoriten gelöscht");
+        render();
+      });
+
+      byId("btnClearCmp").addEventListener("click", ()=>{
+        state.cmp.clear();
+        saveLS("ra_cmp", []);
+        toast("Vergleich geleert");
+        render();
+      });
+
+      // hero actions
+      byId("btnScrollToResults").addEventListener("click", ()=>{
+        const top = byId("viewCars").offsetTop - 80;
+        window.scrollTo({ top, behavior:"smooth" });
+      });
+      byId("btnOpenTradeFromHero").addEventListener("click", ()=> location.hash = "#/inzahlungnahme");
+      byId("btnQuickContact").addEventListener("click", ()=> location.hash = "#/kontakt");
+
+      // details modal
+      byId("btnCloseDetails").addEventListener("click", closeDetails);
+      byId("detailsOverlay").addEventListener("click", (e)=>{
+        if(e.target === byId("detailsOverlay")) closeDetails();
+      });
+      document.addEventListener("keydown", (e)=>{
+        if(e.key === "Escape" && byId("detailsOverlay").classList.contains("show")) closeDetails();
+      });
+      byId("btnDetailsFav").addEventListener("click", ()=>{
+        if(state.selectedVehicleId) toggleFav(state.selectedVehicleId);
+      });
+      byId("btnDetailsCmp").addEventListener("click", ()=>{
+        if(state.selectedVehicleId) toggleCmp(state.selectedVehicleId);
+      });
+
+      // contact
+      byId("contactForm").addEventListener("submit", (e)=>{
+        e.preventDefault();
+        // Teil 2: echte Verarbeitung (Mail/Backend). Hier: Demo-Toast.
+        toast("Nachricht gesendet (Demo)", "In Teil 2 wird das an E-Mail/CRM angebunden.");
+        byId("contactForm").reset();
+      });
+      byId("btnContactDemo").addEventListener("click", ()=>{
+        byId("cName").value = "Max Mustermann";
+        byId("cEmail").value = "max@mail.de";
+        byId("cPhone").value = "+49 171 0000000";
+        byId("cMsg").value = "Hallo, ich hätte gerne eine Probefahrt / Finanzierungsauskunft. Bitte um Rückruf.";
+      });
+
+      // address/phone demo
+      byId("btnCopyAddress").addEventListener("click", async ()=>{
+        const addr = "Reichstein Automobile, Straße 1, 00000 Stadt";
+        try{
+          await navigator.clipboard.writeText(addr);
+          toast("Adresse kopiert", addr);
+        }catch{
+          toast("Kopieren nicht möglich", "Bitte manuell kopieren.");
+        }
+      });
+      byId("btnCall").addEventListener("click", ()=>{
+  window.location.href = `tel:${CONFIG.phoneTel}`;
+});
+      byId("btnWhatsapp").addEventListener("click", ()=>{
+  const text = encodeURIComponent(`Hallo ${CONFIG.company}, ich habe eine Frage zu einem Fahrzeug.`);
+  window.open(`https://wa.me/${CONFIG.whatsappE164}?text=${text}`, "_blank");
+});
+    }
+
+    // =========================
+    // Boot
+    // =========================
+    initFilters();
+    bindEvents();
+    setRoute(location.hash || "#/fahrzeuge");
+    render();
+    function applyCompanyData(){
+  const addr = `${CONFIG.company}, ${CONFIG.street}, ${CONFIG.zipCity}`;
+
+  const a = byId("addressDisplay");
+  if(a) a.textContent = addr;
+
+  const p = byId("phoneDisplay");
+  if(p) p.textContent = CONFIG.phoneDisplay;
+
+  // Map Consent Loader
+  const btn = byId("btnLoadMap");
+  if(btn){
+    btn.addEventListener("click", ()=>{
+      const frame = byId("mapFrame");
+      const consent = byId("mapConsent");
+      if(frame && consent){
+        const q = encodeURIComponent(CONFIG.mapsQuery);
+        frame.innerHTML = `<iframe
+          title="Google Maps"
+          width="100%"
+          height="220"
+          style="border:0;"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=${q}&output=embed"></iframe>`;
+        consent.classList.add("hide");
+        frame.classList.remove("hide");
+      }
     });
+  }
+}
+
+applyCompanyData();
   </script>
 </body>
 </html>
