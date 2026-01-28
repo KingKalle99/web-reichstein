@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reichstein Automobile</title>
+  <meta name="description" content="Reichstein Automobile – Fahrzeuge, Service & Kontakt." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Reichstein Automobile" />
+  <meta property="og:description" content="Fahrzeuge, Service & Kontakt." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#0b0f19;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.08);
+      --text:#eef2ff;
+      --muted: rgba(238,242,255,.72);
+      --border: rgba(255,255,255,.12);
+      --brand: #4f8cff;
+      --brand2:#8b5cf6;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --radius: 16px;
+      --max: 1140px;
+      --pad: 18px;
+      --shadow: 0 16px 50px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1100px 520px at 15% 0%, rgba(79,140,255,.22), transparent 60%),
+        radial-gradient(900px 540px at 85% 10%, rgba(139,92,246,.18), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    a{color:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 var(--pad)}
+    .topbar{
+      position: sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: rgba(11,15,25,.55);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar .inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 12px 0;
+      gap: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 800; text-decoration:none;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background: linear-gradient(135deg,var(--brand),var(--brand2));
+      box-shadow: 0 10px 30px rgba(79,140,255,.22);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    nav{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    nav a{
+      color:var(--muted); text-decoration:none;
+      padding: 8px 10px; border-radius: 10px;
+    }
+    nav a:hover{color:var(--text); background: rgba(255,255,255,.06)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      text-decoration:none;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(79,140,255,.95), rgba(139,92,246,.85));
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 18px 50px rgba(79,140,255,.18);
+    }
+    .btn:hover{filter:brightness(1.05)}
+    .hero{
+      padding: 64px 0 24px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero-grid{grid-template-columns: 1fr}
+    }
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-main{
+      padding: 22px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero-main:before{
+      content:"";
+      position:absolute; inset:-60px;
+      background:
+        radial-gradient(560px 260px at 20% 20%, rgba(79,140,255,.18), transparent 60%),
+        radial-gradient(520px 240px at 80% 0%, rgba(139,92,246,.16), transparent 55%);
+      pointer-events:none;
+    }
+    .hero-main > *{position:relative}
+    h1{margin:0 0 10px; font-size: clamp(2rem, 4vw, 3.1rem); letter-spacing:-.5px}
+    .lead{margin:0 0 16px; color: var(--muted); max-width: 65ch}
+    .pillrow{display:flex; flex-wrap:wrap; gap:10px; margin: 14px 0 18px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 14px;
+      white-space:nowrap;
+    }
+    .dot{width:8px;height:8px;border-radius:99px;background: var(--ok)}
+    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    .hero-side{
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      justify-content:space-between;
+    }
+    .mini{
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .mini h3{margin:0 0 6px; font-size: 16px}
+    .mini p{margin:0; color:var(--muted); font-size: 14px}
+    .grid2{
+      display:grid; grid-template-columns: 1fr 1fr; gap:10px;
+    }
+    @media (max-width: 900px){
+      .grid2{grid-template-columns: 1fr}
+    }
+    section{padding: 26px 0}
+    .section-title{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      margin-bottom: 12px;
+    }
+    h2{margin:0; font-size: 22px}
+    .subtitle{margin:0; color:var(--muted); font-size: 14px}
+    .toolbar{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .input{
+      display:flex; align-items:center; gap:10px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-width: 220px;
+    }
+    .input input, .input select, textarea{
+      width:100%;
+      border:0;
+      outline:none;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+    }
+    .input select option{background: var(--bg)}
+    .vehicles{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){ .vehicles{grid-template-columns: repeat(2,1fr)} }
+    @media (max-width: 640px){ .vehicles{grid-template-columns: 1fr} }
+    .vcard{
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 220px;
+    }
+    .vimg{
+      height: 128px;
+      background:
+        linear-gradient(135deg, rgba(79,140,255,.25), rgba(139,92,246,.18)),
+        radial-gradient(260px 120px at 20% 10%, rgba(255,255,255,.18), transparent 60%),
+        rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .vbody{padding: 14px}
+    .vtitle{margin:0 0 6px; font-weight: 700}
+    .vmeta{margin:0; color: var(--muted); font-size: 14px}
+    .tagrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .tag{
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+    }
+    .price{
+      margin-top: 10px;
+      font-weight: 800;
+      letter-spacing:.2px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 900px){ .row{grid-template-columns:1fr} }
+    .list{
+      display:grid; gap:10px;
+    }
+    .li{
+      display:flex; gap:10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .icon{
+      width:34px;height:34px;border-radius:12px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      flex: 0 0 auto;
+    }
+    .li strong{display:block}
+    .li span{display:block; color:var(--muted); font-size: 14px; margin-top:2px}
+    form{
+      display:grid;
+      gap: 10px;
+    }
+    textarea{
+      min-height: 120px;
+      resize: vertical;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .foot{
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding: 18px 0 28px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .foot .inner{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .smalllinks{display:flex; gap:10px; flex-wrap:wrap}
+    .smalllinks a{color: var(--muted); text-decoration:none}
+    .smalllinks a:hover{color: var(--text)}
+    .floating{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display:flex;
+      gap: 10px;
+      flex-direction:column;
+      z-index:60;
+    }
+    .fab{
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      display:grid;
+      place-items:center;
+      text-decoration:none;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+    .fab.primary{
+      background: linear-gradient(135deg, rgba(34,197,94,.92), rgba(79,140,255,.82));
+      border-color: rgba(255,255,255,.22);
+    }
+    .sr{position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden}
+    .note{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .warn{background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.25)}
+    .ok{background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.25)}
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="inner">
+        <a class="brand" href="#top">
+          <span class="logo" aria-hidden="true"></span>
+          <span>Reichstein Automobile</span>
+        </a>
+        <nav aria-label="Hauptnavigation">
+          <a href="#fahrzeuge">Fahrzeuge</a>
+          <a href="#service">Service</a>
+          <a href="#ueberuns">Über uns</a>
+          <a href="#kontakt">Kontakt</a>
+          <a class="btn primary" href="#kontakt">Anfrage senden</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="card hero-main">
+            <h1>Fahrzeuge mit klaren Infos. Service ohne Umwege.</h1>
+            <p class="lead">
+              Willkommen bei Reichstein Automobile. Hier kannst du Fahrzeuge entdecken, Anfragen stellen
+              und wichtige Infos schnell finden. (Inhalte/Bestand kannst du später einfach ersetzen.)
+            </p>
+
+            <div class="pillrow" aria-label="Highlights">
+              <span class="pill"><span class="dot" aria-hidden="true"></span>Geprüfte Fahrzeuge</span>
+              <span class="pill"><span class="dot" aria-hidden="true"></span>Finanzierung möglich</span>
+              <span class="pill"><span class="dot" aria-hidden="true"></span>Ankauf/Trade-In</span>
+              <span class="pill"><span class="dot" aria-hidden="true"></span>Termin nach Absprache</span>
+            </div>
+
+            <div class="actions">
+              <a class="btn primary" href="#fahrzeuge">Fahrzeuge ansehen</a>
+              <a class="btn" href="#kontakt">Kontakt</a>
+              <a class="btn" href="#service">Leistungen</a>
+            </div>
+
+            <p class="note">
+              Tipp: Ersetze später Logo, Adresse, Telefon, WhatsApp-Nummer und Fahrzeugdaten.
+            </p>
+          </div>
+
+          <aside class="card hero-side" aria-label="Schnellinfos">
+            <div class="mini">
+              <h3>Öffnungszeiten</h3>
+              <p>Mo–Fr: 09:00–18:00<br/>Sa: 10:00–14:00<br/>So: geschlossen</p>
+            </div>
+
+            <div class="grid2">
+              <div class="mini">
+                <h3>Telefon</h3>
+                <p><a href="tel:+491234567890">+49 123 4567890</a></p>
+              </div>
+              <div class="mini">
+                <h3>E-Mail</h3>
+                <p><a href="mailto:info@reichstein-automobile.de">info@reichstein-automobile.de</a></p>
+              </div>
+            </div>
+
+            <div class="mini">
+              <h3>Standort</h3>
+              <p>
+                Musterstraße 1, 12345 Musterstadt<br/>
+                <a href="https://www.google.com/maps?q=Musterstra%C3%9Fe+1+12345+Musterstadt" target="_blank" rel="noopener">
+                  In Google Maps öffnen
+                </a>
+              </p>
+            </div>
+
+            <div class="mini">
+              <span class="badge ok">Schnelle Antwort</span>
+              <span class="badge warn" style="margin-left:8px">Termin empfohlen</span>
+              <p class="note">Du kannst die Texte hier später 1:1 austauschen.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="fahrzeuge">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Fahrzeuge</h2>
+            <p class="subtitle">Demo-Bestand – ersetze die Karten durch echte Fahrzeuge.</p>
+          </div>
+          <div class="toolbar" aria-label="Fahrzeug Filter">
+            <label class="input" aria-label="Suche">
+              <span class="sr">Suche</span>
+              <input id="search" type="search" placeholder="Suchen (z.B. BMW, Diesel, 2020)..." />
+            </label>
+            <label class="input" aria-label="Kategorie">
+              <span class="sr">Kategorie</span>
+              <select id="category">
+                <option value="all">Alle</option>
+                <option value="limousine">Limousine</option>
+                <option value="suv">SUV</option>
+                <option value="kombi">Kombi</option>
+                <option value="kleinwagen">Kleinwagen</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="vehicles" id="vehicleGrid">
+          <!-- Demo cards -->
+          <article class="card vcard" data-category="suv" data-search="bmw x3 diesel 2020 automatik">
+            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
+            <div class="vbody">
+              <h3 class="vtitle">BMW X3 xDrive</h3>
+              <p class="vmeta">2020 • Diesel • Automatik • 78.000 km</p>
+              <div class="tagrow">
+                <span class="tag">SUV</span><span class="tag">8-fach Bereifung</span><span class="tag">Navi</span>
+              </div>
+              <div class="price">24.900 €</div>
+            </div>
+          </article>
+
+          <article class="card vcard" data-category="limousine" data-search="audi a4 benziner 2019 s tronic">
+            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
+            <div class="vbody">
+              <h3 class="vtitle">Audi A4</h3>
+              <p class="vmeta">2019 • Benzin • Automatik • 62.000 km</p>
+              <div class="tagrow">
+                <span class="tag">Limousine</span><span class="tag">LED</span><span class="tag">PDC</span>
+              </div>
+              <div class="price">21.700 €</div>
+            </div>
+          </article>
+
+          <article class="card vcard" data-category="kombi" data-search="vw passat kombi diesel 2018 dsg">
+            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
+            <div class="vbody">
+              <h3 class="vtitle">VW Passat Variant</h3>
+              <p class="vmeta">2018 • Diesel • DSG • 109.000 km</p>
+              <div class="tagrow">
+                <span class="tag">Kombi</span><span class="tag">AHK</span><span class="tag">Klima</span>
+              </div>
+              <div class="price">16.990 €</div>
+            </div>
+          </article>
+
+          <article class="card vcard" data-category="kleinwagen" data-search="opel corsa kleinwagen benziner 2021">
+            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
+            <div class="vbody">
+              <h3 class="vtitle">Opel Corsa</h3>
+              <p class="vmeta">2021 • Benzin • Schalter • 31.000 km</p>
+              <div class="tagrow">
+                <span class="tag">Kleinwagen</span><span class="tag">CarPlay</span><span class="tag">Tempomat</span>
+              </div>
+              <div class="price">12.450 €</div>
+            </div>
+          </article>
+
+          <article class="card vcard" data-category="suv" data-search="skoda kodiaq suv diesel 2022 7 sitzer">
+            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
+            <div class="vbody">
+              <h3 class="vtitle">Škoda Kodiaq</h3>
+              <p class="vmeta">2022 • Diesel • Automatik • 24.000 km</p>
+              <div class="tagrow">
+                <span class="tag">SUV</span><span class="tag">7-Sitzer</span><span class="tag">Kamera</span>
+              </div>
+              <div class="price">32.900 €</div>
+            </div>
+          </article>
+
+          <article class="card vcard" data-category="limousine" data-search="mercedes c klasse limousine diesel 2017">
+            <div class="vimg" role="img" aria-label="Fahrzeugbild Platzhalter"></div>
+            <div class="vbody">
+              <h3 class="vtitle">Mercedes C-Klasse</h3>
+              <p class="vmeta">2017 • Diesel • Automatik • 128.000 km</p>
+              <div class="tagrow">
+                <span class="tag">Limousine</span><span class="tag">Sitzheizung</span><span class="tag">Navi</span>
+              </div>
+              <div class="price">14.800 €</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="note">
+          Wenn du später echte Bilder willst: ersetze in jeder Karte das <code>.vimg</code> durch ein <code>&lt;img&gt;</code>.
+        </p>
+      </div>
+    </section>
+
+    <section id="service">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Service</h2>
+            <p class="subtitle">Leistungen, die du schnell anpassen kannst.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="card" style="padding:16px">
+            <div class="list">
+              <div class="li">
+                <div class="icon" aria-hidden="true">🛠️</div>
+                <div>
+                  <strong>Werkstatt & Inspektion</strong>
+                  <span>Service, HU/AU-Vorbereitung, Checks nach Absprache.</span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">💶</div>
+                <div>
+                  <strong>Finanzierung & Leasing</strong>
+                  <span>Individuelle Angebote je nach Fahrzeug & Laufzeit.</span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">🔁</div>
+                <div>
+                  <strong>Ankauf / Inzahlungnahme</strong>
+                  <span>Schnelle Bewertung – transparent & fair.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:16px">
+            <h3 style="margin:0 0 8px">So läuft eine Anfrage ab</h3>
+            <p class="subtitle" style="margin-bottom:10px">
+              Kurz & klar – damit Kunden wissen, was passiert.
+            </p>
+            <div class="list">
+              <div class="li">
+                <div class="icon" aria-hidden="true">1</div>
+                <div>
+                  <strong>Fahrzeug auswählen</strong>
+                  <span>Oder einfach Wunsch/Anforderung schreiben.</span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">2</div>
+                <div>
+                  <strong>Kontakt senden</strong>
+                  <span>Per Formular, Mail oder WhatsApp.</span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">3</div>
+                <div>
+                  <strong>Antwort erhalten</strong>
+                  <span>Mit Preis, Details, Terminoptionen.</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="note">Du kannst diese Texte später 1:1 ersetzen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ueberuns">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Über uns</h2>
+            <p class="subtitle">Kurzer Textblock für Vertrauen – später anpassen.</p>
+          </div>
+        </div>
+
+        <div class="card" style="padding:18px">
+          <p style="margin:0; color:var(--muted)">
+            Reichstein Automobile steht für transparente Beratung und eine einfache Abwicklung.
+            Hier kannst du ein paar Sätze zu Geschichte, Standort, Spezialisierung und Philosophie ergänzen.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontakt">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Kontakt</h2>
+            <p class="subtitle">Schreibe uns – wir melden uns zurück.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="card" style="padding:16px">
+            <h3 style="margin:0 0 10px">Kontaktformular</h3>
+            <form id="contactForm">
+              <label class="input">
+                <span class="sr">Name</span>
+                <input id="name" name="name" placeholder="Dein Name" autocomplete="name" required />
+              </label>
+              <label class="input">
+                <span class="sr">E-Mail</span>
+                <input id="email" name="email" type="email" placeholder="Deine E-Mail" autocomplete="email" required />
+              </label>
+              <label class="input">
+                <span class="sr">Telefon</span>
+                <input id="phone" name="phone" placeholder="Telefon (optional)" autocomplete="tel" />
+              </label>
+              <textarea id="message" name="message" placeholder="Deine Nachricht..." required></textarea>
+
+              <button class="btn primary" type="submit">Nachricht per E-Mail senden</button>
+              <div class="note">
+                Hinweis: Dieses Formular nutzt <code>mailto:</code> (öffnet dein Mailprogramm).
+                Für echtes Server-Formular später: Netlify Forms, Formspree oder eigenes Backend.
+              </div>
+            </form>
+          </div>
+
+          <div class="card" style="padding:16px">
+            <h3 style="margin:0 0 10px">Direkt</h3>
+            <div class="list">
+              <div class="li">
+                <div class="icon" aria-hidden="true">📞</div>
+                <div>
+                  <strong>Telefon</strong>
+                  <span><a href="tel:+491234567890">+49 123 4567890</a></span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">✉️</div>
+                <div>
+                  <strong>E-Mail</strong>
+                  <span><a href="mailto:info@reichstein-automobile.de">info@reichstein-automobile.de</a></span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">📍</div>
+                <div>
+                  <strong>Adresse</strong>
+                  <span>Musterstraße 1, 12345 Musterstadt</span>
+                </div>
+              </div>
+              <div class="li">
+                <div class="icon" aria-hidden="true">🗺️</div>
+                <div>
+                  <strong>Maps</strong>
+                  <span>
+                    <a href="https://www.google.com/maps?q=Musterstra%C3%9Fe+1+12345+Musterstadt" target="_blank" rel="noopener">
+                      Route planen
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px">
+              <a class="btn" href="#fahrzeuge">Zurück zu Fahrzeuge</a>
+              <a class="btn" href="#top" style="margin-left:8px">Nach oben</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating buttons (edit WhatsApp number) -->
+  <div class="floating" aria-label="Schnellaktionen">
+    <a class="fab" href="mailto:info@reichstein-automobile.de" title="E-Mail">
+      ✉️
+      <span class="sr">E-Mail</span>
+    </a>
+    <a class="fab primary" id="waBtn" href="#" title="WhatsApp">
+      💬
+      <span class="sr">WhatsApp</span>
+    </a>
+  </div>
+
+  <footer class="foot">
+    <div class="container">
+      <div class="inner">
+        <div>
+          <strong style="color:var(--text)">Reichstein Automobile</strong><br/>
+          <span>© <span id="year"></span> • Alle Rechte vorbehalten</span>
+        </div>
+        <div class="smalllinks">
+          <a href="#kontakt">Kontakt</a>
+          <a href="#" onclick="alert('Impressum: Hier später einfügen (z.B. eigene Seite oder Abschnitt).'); return false;">Impressum</a>
+          <a href="#" onclick="alert('Datenschutz: Hier später einfügen (z.B. eigene Seite oder Abschnitt).'); return false;">Datenschutz</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Jahr
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // WhatsApp Link (Nummer ändern!)
+    // Format: Ländercode ohne +, ohne Leerzeichen, z.B. 491701234567
+    const whatsappNumber = "491701234567";
+    const waText = encodeURIComponent("Hallo Reichstein Automobile, ich habe eine Anfrage:");
+    document.getElementById("waBtn").href = "https://wa.me/" + whatsappNumber + "?text=" + waText;
+
+    // Fahrzeug Filter
+    const searchEl = document.getElementById("search");
+    const categoryEl = document.getElementById("category");
+    const cards = Array.from(document.querySelectorAll(".vcard"));
+
+    function applyFilter(){
+      const q = (searchEl.value || "").trim().toLowerCase();
+      const cat = categoryEl.value;
+      cards.forEach(card => {
+        const hay = (card.getAttribute("data-search") || "").toLowerCase();
+        const c = card.getAttribute("data-category") || "all";
+        const matchQ = !q || hay.includes(q);
+        const matchC = (cat === "all") || (c === cat);
+        card.style.display = (matchQ && matchC) ? "" : "none";
+      });
+    }
+    searchEl.addEventListener("input", applyFilter);
+    categoryEl.addEventListener("change", applyFilter);
+
+    // "Formular" via mailto:
+    const form = document.getElementById("contactForm");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      const to = "info@reichstein-automobile.de";
+      const subject = encodeURIComponent("Website-Anfrage – " + (name || "Unbekannt"));
+      const body = encodeURIComponent(
+        "Name: " + name + "\n" +
+        "E-Mail: " + email + "\n" +
+        "Telefon: " + (phone || "-") + "\n\n" +
+        "Nachricht:\n" + message + "\n"
+      );
+
+      window.location.href = "mailto:" + to + "?subject=" + subject + "&body=" + body;
+    });
+  </script>
+</body>
+</html>
