@@ -65,47 +65,30 @@ button, input, select, textarea{ font:inherit; color:inherit; }
   position:sticky;
   top:0;
   z-index:50;
-  backdrop-filter: blur(10px);
-  background: linear-gradient(
-    180deg,
-    rgba(254,254,254,.92),
-    rgba(254,254,254,.85)
-  );
+  background: #FEFEFE;
   border-bottom:1px solid var(--border);
 }
 
 .topbar-inner{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:14px 0;
-  gap:14px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:240px;
-  color:var(--accent);
+  justify-content:center;
+  padding:18px 0 8px;
 }
 
 .logo{
-  width:44px;
-  height:44px;
-  border-radius:14px;
+  width:120px;
+  height:120px;
+  border-radius:24px;
   display:grid;
   place-items:center;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border:1px solid var(--border);
-  box-shadow: var(--shadow2);
+  background: #FEFEFE;
+  border:1px solid rgba(196,203,217,.6);
+  box-shadow: 0 12px 30px rgba(31,56,114,.12);
   overflow:hidden;
 }
 
-.logo img{ width:100%; height:100%; object-fit:cover; }
-
-.brand-title strong{ font-size:14px; }
-.brand-title span{ font-size:12px; color:var(--muted); }
+.logo img{ width:100%; height:100%; object-fit:contain; }
 
 /* ================= NAV ================= */
 
@@ -131,175 +114,7 @@ button, input, select, textarea{ font:inherit; color:inherit; }
   user-select:none;
 }
 
-.pill:hover{
-  background: rgba(254,254,254,.95);
-  color: var(--accent);
-  transform: translateY(-1px);
-}
-
-.pill.primary{
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-color: var(--accent);
-  color:#FEFEFE;
-}
-
-.pill.primary:hover{ filter:brightness(1.05); }
-
-.pill .dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background: var(--accent);
-}
-
-/* ================= HERO ================= */
-
-.hero{ padding:26px 0 18px; }
-
-.hero-grid{
-  display:grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap:18px;
-}
-
-.hero-card{
-  border:1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(254,254,254,.85);
-  box-shadow: var(--shadow);
-}
-
-.hero-inner{ padding:22px; }
-
-.kicker{
-  display:inline-flex;
-  gap:8px;
-  align-items:center;
-  font-size:12px;
-  color: var(--accent);
-  border:1px solid rgba(31,56,114,.25);
-  background: rgba(31,56,114,.08);
-  padding:6px 10px;
-  border-radius:999px;
-}
-
-.kicker .spark{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background: var(--accent);
-}
-
-.hero h1{
-  margin:12px 0 8px;
-  font-size: clamp(26px, 3.2vw, 38px);
-}
-
-.hero p{
-  margin:0;
-  color: var(--muted);
-  max-width: 62ch;
-  font-size:14px;
-  line-height:1.55;
-}
-
-.hero-actions{
-  margin-top:16px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-/* ================= BUTTONS ================= */
-
-.btn{
-  border:1px solid var(--border);
-  background: rgba(254,254,254,.80);
-  color: var(--accent);
-  padding:10px 14px;
-  border-radius:999px;
-  cursor:pointer;
-  transition:.18s ease;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  user-select:none;
-}
-
-.btn:hover{
-  background: rgba(254,254,254,.95);
-  transform: translateY(-1px);
-  border-color: rgba(31,56,114,.30);
-}
-
-.btn.primary{
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-color: var(--accent);
-  color:#FEFEFE;
-}
-
-.btn.primary:hover{ filter:brightness(1.05); }
-
-.btn.ghost{
-  background: transparent;
-  border-color: var(--border);
-  color: var(--muted);
-}
-
-.btn.danger{
-  border-color: rgba(180,35,42,.35);
-  background: rgba(180,35,42,.08);
-  color:#7a0f17;
-}
-
-/* ================= PANELS ================= */
-
-.panel{
-  border:1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(254,254,254,.85);
-  box-shadow: var(--shadow2);
-  margin:12px 0 18px;
-}
-
-.panel-head{
-  padding:14px 16px;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.panel-head h2{
-  margin:0;
-  font-size:14px;
-  color: var(--accent);
-}
-
-.panel-head small{ color: var(--muted); }
-
-.panel-body{ padding:14px 16px 16px; }
-
-/* ================= CARDS ================= */
-
-.card{
-  grid-column: span 4;
-  border:1px solid var(--border);
-  border-radius: var(--radius);
-  background:#FEFEFE;
-  box-shadow: var(--shadow2);
-  overflow:hidden;
-  transition:.18s ease;
-}
-
-.card:hover{
-  transform: translateY(-3px);
-  border-color: rgba(31,56,114,.35);
-}
-
-.thumb{
-  height:190px;
+@@ -303,102 +286,471 @@ button, input, select, textarea{ font:inherit; color:inherit; }
   background:#C4CBD9;
   position:relative;
 }
@@ -324,7 +139,8 @@ button, input, select, textarea{ font:inherit; color:inherit; }
   color:#FEFEFE;
   border-color: var(--accent);
 }
-    /* ================= UTILITIES ================= */
+
+/* ================= UTILITIES ================= */
 
 .muted{ color: var(--muted); }
 .hide{ display:none !important; }
@@ -704,7 +520,6 @@ button, input, select, textarea{ font:inherit; color:inherit; }
   padding:16px;
 }
 
-
 /* ================= FOOTER ================= */
 
 footer{
@@ -733,7 +548,6 @@ footer{
 
 @media (max-width: 620px){
   .card{ grid-column: span 12; }
-  .nav{ justify-content:flex-end; }
   .actions{ align-items:flex-start; }
   .specs{ grid-template-columns:1fr; }
   .range{ grid-template-columns:1fr; }
@@ -744,24 +558,9 @@ footer{
 <body>
   <header class="topbar">
     <div class="wrap topbar-inner">
-      <a class="brand" href="#/fahrzeuge" id="homeLink" aria-label="Zur Fahrzeugsuche">
-        <div class="logo" title="Reichstein Automobile">
-          <!-- LOGO: Lege dein Logo als public/logo.svg (oder ersetze hier die URL) -->
-          <img src="logo.svg" alt="Reichstein Automobile Logo" onerror="this.style.display='none'; this.parentElement.textContent='RA'; this.parentElement.style.fontWeight='800';" />
-        </div>
-        <div class="brand-title">
-          <strong>Reichstein Automobile</strong>
-          <span>Premium Gebrauchtwagen • Modern • Transparent</span>
-        </div>
-      </a>
-
-      <nav class="nav" aria-label="Hauptnavigation">
-        <a class="pill" href="#/fahrzeuge" id="navCars"><span class="dot"></span>Fahrzeuge</a>
-        <a class="pill" href="#/inzahlungnahme" id="navTrade">Inzahlungnahme</a>
-        <a class="pill" href="#/kontakt" id="navContact">Kontakt</a>
-        <a class="pill" href="#/favoriten" id="navFav">Favoriten <span id="favCount" class="chip"><b>0</b></span></a>
-        <a class="pill primary" href="#/vergleich" id="navCompare">Vergleich <span id="cmpCount" class="chip"><b>0</b></span></a>
-      </nav>
+      <div class="logo" aria-label="Reichstein Automobile Logo">
+        <img src="https://media.discordapp.net/attachments/1411474383654092890/1466603781583143016/2192546D-AE56-40C6-85FD-363955650A74.png?ex=697e0175&is=697caff5&hm=d2d9d944e7a08dc5fc87e4fc2a165fa48bbdb9bd30abab97e9ac2899e3cc69f3&=&format=webp&quality=lossless&width=648&height=648" alt="Reichstein Automobile Logo" loading="lazy" />
+      </div>
     </div>
   </header>
 
